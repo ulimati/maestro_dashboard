@@ -11,7 +11,7 @@ st.set_page_config(page_title="Maestro Fix", layout="wide")
 # Načtení dat
 df = get_all_test_data()
 
-st.title("Maestro Dashboard (Mac Fix Mode)")
+st.title("Maestro Dashboard (Mac Fix ModeS)")
 
 if df.empty:
     st.error("Data nenalezena v logs/logs/!")
