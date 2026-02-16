@@ -3,19 +3,11 @@ import os
 import pandas as pd
 from streamlit_calendar import calendar
 from src.data_provider import get_all_test_data, get_log_content
-from src.components import render_metrics, render_charts, highlight_logs
+from src.components import render_metrics, render_charts
 
 st.set_page_config(page_title="Maestro Fix", layout="wide")
 
-df = get_all_test_data()
-
-if df.empty:
-    st.error("❌ Data nenalezena!")
-    st.stop()
-
-df['date'] = df['run_id'].str[:10]
-
-# --- CSS PRO KALENDÁŘ A IKONY ---
+# --- CSS ---
 st.markdown("""
 <style>
     .fc { background: #1c1c1e !important; border-radius: 18px; padding: 10px; border: none !important; color: white !important; font-size: 0.8rem; }
@@ -24,33 +16,36 @@ st.markdown("""
     .fc-daygrid-event { background-color: #ff453a !important; border-radius: 50% !important; width: 4px !important; height: 4px !important; margin: 0 auto !important; }
     .fc-theme-standard td, .fc-theme-standard th, .fc-scrollgrid { border: none !important; }
     .fc-button { background: transparent !important; border: none !important; color: #8e8e93 !important; padding: 0 !important; }
-    
-    /* Stylování pro platformy vpravo nahoře */
-    .platform-box {
-        text-align: right;
-        padding-top: 10px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
-# --- HLAVIČKA S IKONAMI ---
+# --- HLAVIČKA A VÝBĚR PLATFORMY ---
 head_col, icon_col = st.columns([4, 1])
 
 with head_col:
-    st.title("Maestro Dashboard (Mac Fix Mode)")
+    st.title("Maestro Dashboard")
 
 with icon_col:
     st.write("")
-    # Přepínač platformy (zatím jen vizuální)
     platform = st.radio(
         "Platforma:",
         ["🤖 Android", "🍎 iOS"],
         horizontal=True,
         label_visibility="collapsed"
     )
-
     st.write("---")
     is_dark = st.toggle("🌙 Dark Mode", value=True)
+
+# --- NAČTENÍ DAT (Dynamicky podle platformy) ---
+df = get_all_test_data(platform)
+
+if df.empty:
+    target_folder = "logs/logs_android" if "Android" in platform else "logs/logs_ios"
+    st.warning(f"⚠️ Žádná data pro {platform} nebyla nalezena ve složce `{target_folder}`.")
+    st.info("Ujistěte se, že složka existuje a obsahuje XML reporty.")
+    st.stop()
+
+df['date'] = df['run_id'].str[:10]
 
 # --- 1. KALENDÁŘ A VÝBĚR DNE ---
 col_cal, col_info, _ = st.columns([0.7, 1, 1])
@@ -79,7 +74,7 @@ available_runs = sorted(df[df['date'] == selected_date]['run_id'].unique(), reve
 selected_run = None
 
 with col_info:
-    st.subheader(f"📅 Výběr běhu pro den: {selected_date}")
+    st.subheader(f"📅 Běhy pro: {selected_date}")
     if available_runs:
         selected_run = st.selectbox("Vyberte konkrétní testovací běh:", available_runs, key="run_selector")
     else:
@@ -87,10 +82,8 @@ with col_info:
 
 st.divider()
 
-# --- 2. GLOBÁLNÍ STATISTIKA (Vždy viditelná a neměnná) ---
-with st.expander("📊 STATISTIKA VŠECH TESTŮ (CELKOVÁ HISTORIE)", expanded=True):
-    st.header("Globální přehled za všechna data")
-    
+# --- 2. GLOBÁLNÍ STATISTIKA ---
+with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
     total_all = len(df)
     passed_all = len(df[df['status'] == "Passed"])
     failed_all = len(df[df['status'] == "Failed"])
@@ -101,25 +94,18 @@ with st.expander("📊 STATISTIKA VŠECH TESTŮ (CELKOVÁ HISTORIE)", expanded=T
     m2.metric("Úspěšné", passed_all)
     m3.metric("Selhalo", failed_all)
     m4.metric("Success Rate", f"{rate_all:.1f}%")
-
-    render_charts(df, key_suffix="global_history")
+    render_charts(df, key_suffix="global")
 
 # --- 3. DETAILNÍ STATISTIKA PRO VYBRANÝ BĚH ---
 if selected_run:
     st.divider()
-    
-    with st.expander(f"🔎 DETAILNÍ STATISTIKA PRO BĚH: {selected_run}", expanded=True):
-        
-        # Filtrace data POUZE pro tento jeden vybraný běh
+    with st.expander(f"🔎 DETAIL BĚHU: {selected_run}", expanded=True):
         run_df = df[df['run_id'] == selected_run].copy()
-
-        # Zobrazení metrik a grafů pro konkrétní běh
         render_metrics(run_df)
-        render_charts(run_df, key_suffix="single_run_detail")
+        render_charts(run_df, key_suffix="single_run")
         
         st.divider()
-        st.subheader("Průzkumník kroků vybraného testu")
-        
+        st.subheader("Kroky testu")
         for i, row in run_df.iterrows():
             status_icon = "✅" if row['status'] == "Passed" else "🔴"
             with st.expander(f"{status_icon} {row['test_name']} | {row['duration']}s"):
@@ -130,9 +116,12 @@ if selected_run:
                         st.error(f"Chyba: {row['error_msg']}")
                 with col2:
                     if row['status'] == "Failed":
+                        # Cesta k obrázku (předpokládá název fail_ID.png)
                         img_path = os.path.join(row['folder_path'], f"fail_{row['test_id']}.png")
                         if os.path.exists(img_path):
-                            st.image(img_path, caption="Snímek chyby")
+                            st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
+                        else:
+                            st.info(f"Snímek nenalezen v: {img_path}")
                 
                 log_content = get_log_content(row['folder_path'], "console_output.log")
-                st.code(log_content, language="log")
+                st.code("".join(log_content), language="log")
