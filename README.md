@@ -1,50 +1,50 @@
 # Maestro Dashboard
 
-Maestro Dashboard je vizualizační nástroj postavený na frameworku **Streamlit**, který slouží k přehlednému zobrazení výsledků automatizovaných testů (Maestro). Aplikace parsuje XML reporty a logy, poskytuje statistiky úspěšnosti, interaktivní grafy a detailní náhledy chyb pro platformy Android a iOS.
+Maestro Dashboard is a visualization tool built on the **Streamlit** framework, designed to clearly display the results of automated tests (Maestro). The application parses XML reports and logs, providing success statistics, interactive charts, and detailed error previews for Android and iOS platforms.
 
-## Hlavní funkce
-* **Podpora více platforem:** Přepínání mezi výsledky pro Android a iOS.
+## Main Features
+* **Multi-platform Support:** Switch between Android and iOS results.
   
-* **Interaktivní kalendář:** Filtrace testovacích běhů podle data pomocí vizuálního kalendáře.
+* **Interactive Calendar:** Filter test runs by date using a visual calendar.
   
-* **Globální přehled:** Souhrnné statistiky (Total, Passed, Failed, Success Rate) pro celou historii testování.
+* **Global Overview:** Summary statistics (Total, Passed, Failed, Success Rate) for the entire testing history.
   
-* **Detailní analýza běhu:**
-  * Koláčové grafy poměru úspěšnosti.
-  * Sloupcové grafy průměrné doby trvání jednotlivých testů.
+* **Detailed Run Analysis:**
+  * Pie charts for success ratios.
+  * Bar charts for the average duration of individual tests.
     
-* **Inspekce chyb:**
-  * Barevné zvýraznění chybových hlášek v logách (Error, Fatal, Exception).
-  * Zobrazení screenshotů selhání u neúspěšných testů.
-  * Přístup k celému obsahu `console_output.log`.
+* **Error Inspection:**
+  * Color highlighting of error messages in logs (Error, Fatal, Exception).
+  * Display of failure screenshots for failed tests.
+  * Access to the full content of `console_output.log`.
 
-## Struktura projektu
-Aplikace je rozdělena do logických modulů pro oddělení logiky načítání dat, vykreslování a samotného rozhraní.
+## Project Structure
+The application is divided into logical modules to separate data loading logic, rendering, and the interface itself.
 
 ```text
-├── app.py                 # Hlavní spouštěcí soubor aplikace
+├── app.py                 # Main application entry point
 ├── src/
-│   ├── components.py      # UI komponenty (metriky, grafy, log viewer)
-│   └── data_provider.py   # Načítání a parsování XML/log souborů
-├── logs/                  # Adresář pro vstupní data (viz níže)
+│   ├── components.py      # UI components (metrics, charts, log viewer)
+│   └── data_provider.py   # XML/log file loading and parsing
+├── logs/                  # Input data directory (see below)
 │   ├── logs_android/
 │   └── logs_ios/
-└── requirements.txt       # Seznam závislostí
+└── requirements.txt       # List of dependencies
 ```
 
-## Požadavky
+## Requirements
 * Python 3.9+
-* Knihovny uvedené v requirements.txt (zejména Streamlit, Pandas, Plotly, Pillow, Streamlit Calendar).
+* Libraries listed in requirements.txt (specifically Streamlit, Pandas, Plotly, Pillow, Streamlit Calendar).
 
-## Instalace a spuštění
-* **1. Klonování repozitáře:**
+## Installation and Setup
+* **1. Cloning the repository:**
 
 ```text
 git clone <url-repozitare>
 cd maestro-dashboard
 ```
 
-* **2. Vytvoření virtuálního prostředí (doporučeno):**
+* **2. Creating a virtual environment (recommended):**
 
 ```text
 python -m venv venv
@@ -56,62 +56,62 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-* **3. Instalace závislostí:**
+* **3. Installing dependencies:**
 
 ```text
 pip install streamlit pandas plotly streamlit-calendar
 ```
 
-* **4. Spuštění aplikace:**
+* **4. Running the application:**
 
 ```text
 streamlit run app.py
 ```
 
-## Organizace dat (Složka logs)
-Aby aplikace správně načetla data, je nutné dodržet přesnou strukturu složek uvnitř adresáře `logs`. Aplikace očekává XML reporty (JUnit format) a případné screenshoty/logy.
-Struktura musí vypadat následovně:
+## Data Organization (Logs Directory)
+For the application to load data correctly, strict folder structure must be adhered to within the `logs` directory. The application expects XML reports (JUnit format) and optional screenshots/logs.
+The structure must look as follows:
 ```text
 logs/
-├── logs_android/                     # Data pro Android sekci
-│   └── <timestamp_nebo_id_behu>/     # Složka konkrétního běhu (např. 2026-02-13_06-09-21)
-│       ├── report_1.xml              # Výsledek testu (JUnit XML)
-│       ├── fail_1.png                # Screenshot chyby (volitelné, musí odpovídat ID testu)
-│       └── console_output.log        # Textový log testu
+├── logs_android/                     # Data for the Android section
+│   └── <timestamp_nebo_id_behu>/     # Specific run folder (e.g., 2026-02-13_06-09-21)
+│       ├── report_1.xml              # Test result (JUnit XML)
+│       ├── fail_1.png                # Error screenshot (optional, must match test ID)
+│       └── console_output.log        # Text log of the test
 │
-└── logs_ios/                         # Data pro iOS sekci
+└── logs_ios/                         # Data for the iOS section
     └── <timestamp_nebo_id_behu>/
         ├── report_1.xml
         └── ...
 ```
 
-## Formát souborů
+## File Formats
 
-* **XML Reporty**: Aplikace parsuje standardní JUnit XML výstup. Klíčové atributy jsou `testcase name`, `time` a element `failure` pro detekci chyb.
+* **XML Reports**: The application parses standard JUnit XML output. Key attributes are `testcase name`, `time`, and the `failure` element for error detection.
 
-* **Screenshoty**: Pokud test selže, aplikace hledá obrázek ve formátu `fail_{ID}.png`, kde `{ID}` odpovídá číslu v názvu XML souboru (např. pro `report_123.xml` hledá `fail_123.png`).
+* **Screenshots**:If a test fails, the application looks for an image in the format `fail_{ID}.png`, where `{ID}` corresponds to the number in the XML file name (e.g., for `report_123.xml` it searches for `fail_123.png`).
 
-* **Logy**: Pro zobrazení detailního výpisu se očekává soubor pojmenovaný `console_output.log`.
-
-
-## Logika aplikace
-* **Načítání dat**: Skript data_provider.py skenuje složky logs_android nebo logs_ios na základě výběru uživatele.
-
-* **Kalendář:** Z názvů složek (očekává se datum ve formátu YYYY-MM-DD na začátku názvu složky) se generují události do kalendáře.
-
-* **Visualizace:**
-
-  * `render_metrics`: Počítá success rate a průměrné časy.
-  * `highlight_logs`: Prochází text logu a aplikuje HTML stylování na řádky obsahující klíčová slova jako "ERROR" nebo "FAIL".
+* **Logs**: To display a detailed output, a file named `console_output.log` is expected.
 
 
-## Řešení problémů
-* **Chyba: Žádná data nebyla nalezena**
+## Application Logic
+* **Data Loading**: The `data_provider.py` script scans the `logs_android` or `logs_ios` folders based on the user's selection.
 
-  * Ověřte, že ve složce projektu existuje složka `logs`.
-  * Ověřte, že podadresáře jsou pojmenovány přesně `logs_android` a `logs_ios`.
-  * Zkontrolujte, zda XML soubory nejsou poškozené.
+* **Calendar:** Events are generated in the calendar based on folder names (a date in YYYY-MM-DD format is expected at the beginning of the folder name).
 
-* **Chyba: Nezobrazují se screenshoty**
+* **Visualization:**
 
-  * Ujistěte se, že název screenshotu odpovídá konvenci `fail_{test_id}.png`. ID testu je odvozeno z názvu XML souboru (např. `report_5.xml` -> ID `5`).
+  * `render_metrics`: Calculates success rate and average times.
+  * `highlight_logs`: Scans log text and applies HTML styling to lines containing keywords like "ERROR" or "FAIL".
+
+
+## Troubleshooting
+* **Error: No data found**
+
+  * Verify that a `logs` folder exists in the project directory.
+  * Verify that subdirectories are named exactly `logs_android` and `logs_ios`.
+  * Check if the XML files are not corrupted.
+
+* **Error: Screenshots are not appearing**
+
+  * Ensure the screenshot name follows the `fail_{test_id}.png` convention. The test ID is derived from the XML filename (e.g., `report_5.xml` -> ID `5`).
