@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 def render_metrics(df):
+    """Vykreslí základní metriky testů."""
     total = len(df)
     success_count = len(df[df['status'] == 'Passed'])
     success_rate = (success_count / total * 100) if total > 0 else 0
@@ -12,8 +13,10 @@ def render_metrics(df):
     c2.metric("Success Rate", f"{success_rate:.1f}%")
     c3.metric("Průměrná doba", f"{avg_time:.2f}s")
 
-def render_charts(df):
+def render_charts(df, key_suffix=""):
+    """Vykreslí grafy s unikátním klíčem pro zamezení chybám."""
     col1, col2 = st.columns(2)
+    
     with col1:
         # Koláčový graf úspěšnosti
         fig_pie = px.pie(
@@ -24,7 +27,8 @@ def render_charts(df):
             color_discrete_map={'Passed': '#2ecc71', 'Failed': '#e74c3c'},
             hole=0.4
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        # Přidán unikátní klíč 'key'
+        st.plotly_chart(fig_pie, use_container_width=True, key=f"pie_{key_suffix}")
     
     with col2:
         # Sloupcový graf průměrných časů pro každý název testu
@@ -37,12 +41,11 @@ def render_charts(df):
             labels={'test_name': 'Název testu', 'duration': 'Čas (s)'}
         )
         fig_bar.update_traces(marker_color='#3498db')
-        st.plotly_chart(fig_bar, use_container_width=True)
+        # Přidán unikátní klíč 'key'
+        st.plotly_chart(fig_bar, use_container_width=True, key=f"bar_{key_suffix}")
 
 def highlight_logs(lines):
-    """
-    Vykreslí řádky logu s barevným zvýrazněním chyb.
-    """
+    """Vykreslí řádky logu s barevným zvýrazněním chyb."""
     if not lines or (len(lines) == 1 and "nebyl nalezen" in lines[0]):
         st.info(lines[0] if lines else "Log je prázdný.")
         return
@@ -51,7 +54,6 @@ def highlight_logs(lines):
     for line in lines:
         safe_line = line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         
-        # Kontrola klíčových slov pro barvení
         if any(word in safe_line.upper() for word in ["ERROR", "FATAL", "EXCEPTION", "FAIL"]):
             highlighted_html += f'<span style="color: #ff4b4b; font-weight: bold;">{safe_line}</span>'
         elif "WARN" in safe_line.upper():
@@ -62,7 +64,6 @@ def highlight_logs(lines):
         if not safe_line.endswith('\n'):
             highlighted_html += "\n"
 
-    # Vykreslení do stylovaného kontejneru
     st.markdown(
         f"""
         <div style="

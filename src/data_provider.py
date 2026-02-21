@@ -1,12 +1,13 @@
 import os
 import pandas as pd
 import xml.etree.ElementTree as ET
+import json
 import streamlit as st
 
 @st.cache_data
 def get_all_test_data(platform_selection):
     """
-    Načte data z XML reportů na základě zvolené platformy.
+    Načte data z XML a JSON reportů na základě zvolené platformy.
     Očekává strukturu: logs/logs_android/... nebo logs/logs_ios/...
     """
     data = []
@@ -23,11 +24,12 @@ def get_all_test_data(platform_selection):
         run_path = os.path.join(logs_dir, run_id)
         
         if os.path.isdir(run_path):
-            # Procházení XML souborů v daném běhu
+            # Procházení souborů v daném běhu
             for file in os.listdir(run_path):
+                
+                # --- ZPRACOVÁNÍ XML ---
                 if file.endswith(".xml"):
                     xml_path = os.path.join(run_path, file)
-                    
                     try:
                         tree = ET.parse(xml_path)
                         root = tree.getroot()
@@ -35,8 +37,6 @@ def get_all_test_data(platform_selection):
                         for testcase in root.iter('testcase'):
                             test_name = testcase.get('name')
                             duration = float(testcase.get('time', 0))
-                            
-                            # ID testu pro párování screenshotů (např. report_1.xml -> test_id = 1)
                             test_id = file.replace("report_", "").replace(".xml", "")
                             
                             failure_node = testcase.find('failure')
@@ -54,6 +54,34 @@ def get_all_test_data(platform_selection):
                             })
                     except Exception as e:
                         print(f"Chyba při parsování {xml_path}: {e}")
+
+                # --- ZPRACOVÁNÍ JSON ---
+                elif file.endswith(".json"):
+                    json_path = os.path.join(run_path, file)
+                    try:
+                        # Opraveno na json.load()
+                        with open(json_path, "r", encoding="utf-8") as f:
+                            json_data = json.load(f)
+
+                            # Opraveno odstraňování přípony .json
+                            test_id = file.replace("report_", "").replace(".json", "")
+                            test_name = json_data.get("name", file)
+
+                            total_tests = int(json_data.get("totalTests",0))
+                            passed_tests = int(json_data.get("passedTests",0))
+                            failed_tests = int(json_data.get("failedTests",0))
+
+                            data.append({
+                                "run_id": run_id,
+                                "test_id": test_id,
+                                "test_name": test_name,
+                                "status": status,
+                                "duration": duration,
+                                "error_msg": error_msg,
+                                "folder_path": run_path
+                            })
+                    except Exception as e:
+                        print(f"Chyba při parsování {json_path}: {e}") # Opraven výpis proměnné
 
     return pd.DataFrame(data)
 

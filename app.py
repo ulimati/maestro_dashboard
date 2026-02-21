@@ -1,12 +1,16 @@
 import streamlit as st
 import os
 import pandas as pd
+import datetime
 from streamlit_calendar import calendar
 from src.data_provider import get_all_test_data, get_log_content
 from src.components import render_metrics, render_charts
 
-st.set_page_config(page_title="Maestro Fix", layout="wide")
+# Paměť pro zobrazení API reportu
+if 'zobrazit_api_report' not in st.session_state:
+    st.session_state.zobrazit_api_report = False
 
+st.set_page_config(page_title="Maestro Fix", layout="wide")
 # --- CSS ---
 st.markdown("""
 <style>
@@ -33,8 +37,9 @@ with icon_col:
         horizontal=True,
         label_visibility="collapsed"
     )
-    st.write("---")
-    is_dark = st.toggle("🌙 Dark Mode", value=True)
+
+if st.button("⚙️ Spustit API Testy", use_container_width=True):
+    st.session_state.zobrazit_api_report = True
 
 # --- NAČTENÍ DAT (Dynamicky podle platformy) ---
 df = get_all_test_data(platform)
@@ -81,6 +86,73 @@ with col_info:
         st.warning("V tento den neběžely žádné testy.")
 
 st.divider()
+
+# --- SEKCE: API TEST REPORT ---
+# Zobrazí se pouze, pokud jsme klikli na tlačítko "Spustit API Testy"
+if st.session_state.zobrazit_api_report:
+    st.divider() # Oddělovací čára
+    
+    aktualni_cas = datetime.datetime.now().strftime("%d. %m. %Y %H:%M:%S")      
+    st.markdown("### In-App Shop Cart API Test Report")
+    st.caption(f"Generated: {aktualni_cas}")
+
+    df_vysledky = get_all_test_data(st.session_state.get("vybrana_platforma", "Android"))
+    
+# Vsechny testy napric vsemi JSON soubory
+    soucet_total = int(df_vysledky["total_tests"].sum()) if "total_tests" in df_vysledky.columns else 0
+    soucet_passed = int(df_vysledky["passed_tests"].sum()) if "passed_tests" in df_vysledky.columns else 0
+    soucet_failed = int(df_vysledky["failed_tests"].sum()) if "failed_tests" in df_vysledky.columns else 0
+    soucet_skipped = 0
+
+    # 4 Barevné boxy vedle sebe
+    col_tot, col_pass, col_fail, col_skip = st.columns(4)
+    with col_tot:
+        st.info(f"TOTAL TESTS\n### {soucet_total}")
+    with col_pass:
+        st.success(f"PASSED\n### {soucet_passed}")
+    with col_fail:
+        st.error(f"FAILED\n### {soucet_failed}")
+    with col_skip:
+        st.warning(f"SKIPPED\n### {soucet_skipped}")
+
+    st.markdown("#### Test Results")
+    
+ # 3. DYNAMICKÉ VYKRESLENÍ DETAILŮ (Smyčka přes všechny načtené JSONy)
+    if df_vysledky.empty:
+        st.info("Zatím tu nejsou žádné testy k zobrazení.")
+    else:
+        # Půjdeme řádek po řádku v načtených datech
+        for index, row in df_vysledky.iterrows():
+            with st.container(border=True):
+                # Zelená nebo červená ikonka podle toho, jestli test prošel
+                ikona = "✅" if row.get("status") == "Passed" else "❌"
+                nazev_testu = row.get("test_name", "Neznámý test")
+                
+                st.markdown(f"##### {ikona} {nazev_testu}")
+                st.write(f"**Status:** {row.get('status', 'N/A')}")
+                st.write(f"**Duration:** {row.get('duration', 0)} ms")
+                
+                # Pokud v JSONu máte i chybovou hlášku, rovnou ji ukážeme (když test spadne)
+                chyba = row.get("error_msg", "")
+                if chyba:
+                    st.error(f"**Error:** {chyba}")
+                
+                st.markdown("**Response:**")
+                # Zde pro ukázku zobrazíme data konkrétního testu (můžete si pak napojit na reálný response)
+                st.json({
+                    "test_id": row.get("test_id", ""),
+                    "run_id": row.get("run_id", ""),
+                    "file_path": row.get("folder_path", "")
+                })
+    
+    # Tlačítko pro opětovné skrytí reportu
+    if st.button("❌ Zavřít API Report"):
+        st.session_state.zobrazit_api_report = False
+        st.rerun() 
+        
+    st.divider()
+# --- KONEC SEKCE API REPORTU ---
+
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
