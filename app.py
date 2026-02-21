@@ -88,7 +88,6 @@ with col_info:
 st.divider()
 
 # --- SEKCE: API TEST REPORT ---
-# Zobrazí se pouze, pokud jsme klikli na tlačítko "Spustit API Testy"
 if st.session_state.zobrazit_api_report:
     st.divider() # Oddělovací čára
     
@@ -97,7 +96,7 @@ if st.session_state.zobrazit_api_report:
     st.caption(f"Generated: {aktualni_cas}")
 
     df_vysledky = get_all_test_data(st.session_state.get("vybrana_platforma", "Android"))
-    
+
 # Vsechny testy napric vsemi JSON soubory
     soucet_total = int(df_vysledky["total_tests"].sum()) if "total_tests" in df_vysledky.columns else 0
     soucet_passed = int(df_vysledky["passed_tests"].sum()) if "passed_tests" in df_vysledky.columns else 0
@@ -121,10 +120,8 @@ if st.session_state.zobrazit_api_report:
     if df_vysledky.empty:
         st.info("Zatím tu nejsou žádné testy k zobrazení.")
     else:
-        # Půjdeme řádek po řádku v načtených datech
         for index, row in df_vysledky.iterrows():
             with st.container(border=True):
-                # Zelená nebo červená ikonka podle toho, jestli test prošel
                 ikona = "✅" if row.get("status") == "Passed" else "❌"
                 nazev_testu = row.get("test_name", "Neznámý test")
                 
@@ -132,13 +129,12 @@ if st.session_state.zobrazit_api_report:
                 st.write(f"**Status:** {row.get('status', 'N/A')}")
                 st.write(f"**Duration:** {row.get('duration', 0)} ms")
                 
-                # Pokud v JSONu máte i chybovou hlášku, rovnou ji ukážeme (když test spadne)
                 chyba = row.get("error_msg", "")
                 if chyba:
                     st.error(f"**Error:** {chyba}")
                 
                 st.markdown("**Response:**")
-                # Zde pro ukázku zobrazíme data konkrétního testu (můžete si pak napojit na reálný response)
+                # data konkrétního testu
                 st.json({
                     "test_id": row.get("test_id", ""),
                     "run_id": row.get("run_id", ""),
@@ -152,7 +148,6 @@ if st.session_state.zobrazit_api_report:
         
     st.divider()
 # --- KONEC SEKCE API REPORTU ---
-
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
