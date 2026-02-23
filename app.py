@@ -6,12 +6,9 @@ from streamlit_calendar import calendar
 from src.data_provider import get_all_test_data, get_log_content
 from src.components import render_metrics, render_charts
 
-# Paměť pro zobrazení API reportu
-if 'zobrazit_api_report' not in st.session_state:
-    st.session_state.zobrazit_api_report = False
-
 st.set_page_config(page_title="Maestro Fix", layout="wide")
-# --- CSS ---
+
+# --- CSS PRO KALENDÁŘ A UI ---
 st.markdown("""
 <style>
     .fc { background: #1c1c1e !important; border-radius: 18px; padding: 10px; border: none !important; color: white !important; font-size: 0.8rem; }
@@ -24,7 +21,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- HLAVIČKA A VÝBĚR PLATFORMY ---
-head_col, icon_col = st.columns([4, 1])
+head_col, icon_col = st.columns([4, 1.5])
 
 with head_col:
     st.title("Maestro Dashboard")
@@ -33,26 +30,74 @@ with icon_col:
     st.write("")
     platform = st.radio(
         "Platforma:",
-        ["🤖 Android", "🍎 iOS"],
+        ["🤖 Android", "🍎 iOS", "⚙️ API"],
         horizontal=True,
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="platform_selector"
     )
 
-if st.button("⚙️ Spustit API Testy", use_container_width=True):
-    st.session_state.zobrazit_api_report = True
+# =================================================================
+# SEKCE 1: API TEST REPORT (Zobrazí se jen při volbě API)
+# =================================================================
+if "API" in platform:
+    st.divider()
+    df_api = get_all_test_data("⚙️ API")
 
-# --- NAČTENÍ DAT (Dynamicky podle platformy) ---
+    if df_api.empty:
+        st.warning("⚠️ Žádná API data nebyla nalezena ve složce `logs/json`.")
+        st.stop()
+
+    aktualni_cas = datetime.datetime.now().strftime("%d. %m. %Y %H:%M:%S")      
+    st.markdown(f"### ⚙️ In-App Shop Cart API Test Report")
+    st.caption(f"Aktualizováno: {aktualni_cas}")
+
+    # Horní metriky (použití tvé komponenty)
+    render_metrics(df_api)
+
+    # Rozdělení na záložky (Tabs), aby se v 180 testech dalo vyznat
+    tab_summary, tab_failed, tab_all = st.tabs([
+        "📊 Grafický přehled", 
+        f"❌ Selhalo ({len(df_api[df_api['status'] == 'Failed'])})", 
+        f"📑 Všechny výsledky ({len(df_api)})"
+    ])
+
+    with tab_summary:
+        render_charts(df_api, key_suffix="api_main")
+
+    with tab_failed:
+        failed_tests = df_api[df_api['status'] == "Failed"]
+        if failed_tests.empty:
+            st.success("Žádné testy neselhaly! 🎉")
+        else:
+            for _, row in failed_tests.iterrows():
+                with st.expander(f"❌ {row['test_name']} | {row['duration']}ms", expanded=True):
+                    st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
+                    st.json(row.to_dict())
+
+    with tab_all:
+        # Použití sloupců, aby se seznam 180 testů zkrátil
+        cols = st.columns(2)
+        for i, (idx, row) in enumerate(df_api.iterrows()):
+            with cols[i % 2]:
+                ikona = "✅" if row['status'] == "Passed" else "❌"
+                with st.expander(f"{ikona} {row['test_name']}"):
+                    st.write(f"**Trvání:** {row['duration']}ms")
+                    st.json(row.to_dict())
+    
+    st.stop() # Zabrání vykreslení kalendáře pod API reportem
+
+# =================================================================
+# SEKCE 2: MOBILNÍ TESTY (Android / iOS)
+# =================================================================
 df = get_all_test_data(platform)
 
 if df.empty:
-    target_folder = "logs/logs_android" if "Android" in platform else "logs/logs_ios"
-    st.warning(f"⚠️ Žádná data pro {platform} nebyla nalezena ve složce `{target_folder}`.")
-    st.info("Ujistěte se, že složka existuje a obsahuje XML reporty.")
+    st.warning(f"⚠️ Žádná data pro {platform} nebyla nalezena.")
     st.stop()
 
 df['date'] = df['run_id'].str[:10]
 
-# --- 1. KALENDÁŘ A VÝBĚR DNE ---
+# --- KALENDÁŘ A VÝBĚR DNE ---
 col_cal, col_info, _ = st.columns([0.7, 1, 1])
 
 with col_cal:
@@ -66,6 +111,7 @@ with col_cal:
     }
     state = calendar(events=events, options=cal_options, key="maestro_calendar")
 
+# Logika výběru data
 if state.get("dateClick"):
     raw_date = pd.to_datetime(state["dateClick"]["date"]) + pd.Timedelta(hours=12)
     selected_date = raw_date.strftime('%Y-%m-%d')
@@ -77,77 +123,13 @@ else:
 
 available_runs = sorted(df[df['date'] == selected_date]['run_id'].unique(), reverse=True)
 selected_run = None
-
 with col_info:
     st.subheader(f"📅 Běhy pro: {selected_date}")
-    if available_runs:
-        selected_run = st.selectbox("Vyberte konkrétní testovací běh:", available_runs, key="run_selector")
-    else:
-        st.warning("V tento den neběžely žádné testy.")
+    selected_run = st.selectbox("Vyberte konkrétní testovací běh:", available_runs if available_runs else ["Žádné běhy"])
 
 st.divider()
 
-# --- SEKCE: API TEST REPORT ---
-if st.session_state.zobrazit_api_report:
-    st.divider() # Oddělovací čára
-    
-    aktualni_cas = datetime.datetime.now().strftime("%d. %m. %Y %H:%M:%S")      
-    st.markdown("### In-App Shop Cart API Test Report")
-    st.caption(f"Generated: {aktualni_cas}")
-
-    df_vysledky = get_all_test_data(st.session_state.get("vybrana_platforma", "Android"))
-
-# Vsechny testy napric vsemi JSON soubory
-    soucet_total = int(df_vysledky["total_tests"].sum()) if "total_tests" in df_vysledky.columns else 0
-    soucet_passed = int(df_vysledky["passed_tests"].sum()) if "passed_tests" in df_vysledky.columns else 0
-    soucet_failed = int(df_vysledky["failed_tests"].sum()) if "failed_tests" in df_vysledky.columns else 0
-    soucet_skipped = 0
-
-    # 4 Barevné boxy vedle sebe
-    col_tot, col_pass, col_fail, col_skip = st.columns(4)
-    with col_tot:
-        st.info(f"TOTAL TESTS\n### {soucet_total}")
-    with col_pass:
-        st.success(f"PASSED\n### {soucet_passed}")
-    with col_fail:
-        st.error(f"FAILED\n### {soucet_failed}")
-    with col_skip:
-        st.warning(f"SKIPPED\n### {soucet_skipped}")
-
-    st.markdown("#### Test Results")
-    
- # 3. DYNAMICKÉ VYKRESLENÍ DETAILŮ (Smyčka přes všechny načtené JSONy)
-    if df_vysledky.empty:
-        st.info("Zatím tu nejsou žádné testy k zobrazení.")
-    else:
-        for index, row in df_vysledky.iterrows():
-            with st.container(border=True):
-                ikona = "✅" if row.get("status") == "Passed" else "❌"
-                nazev_testu = row.get("test_name", "Neznámý test")
-                
-                st.markdown(f"##### {ikona} {nazev_testu}")
-                st.write(f"**Status:** {row.get('status', 'N/A')}")
-                st.write(f"**Duration:** {row.get('duration', 0)} ms")
-                
-                chyba = row.get("error_msg", "")
-                if chyba:
-                    st.error(f"**Error:** {chyba}")
-                
-                st.markdown("**Response:**")
-                # data konkrétního testu
-                st.json({
-                    "test_id": row.get("test_id", ""),
-                    "run_id": row.get("run_id", ""),
-                    "file_path": row.get("folder_path", "")
-                })
-    
-    # Tlačítko pro opětovné skrytí reportu
-    if st.button("❌ Zavřít API Report"):
-        st.session_state.zobrazit_api_report = False
-        st.rerun() 
-        
-    st.divider()
-# --- KONEC SEKCE API REPORTU ---
+# --- GLOBÁLNÍ HISTORIE ---
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
@@ -162,6 +144,7 @@ with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
     m3.metric("Selhalo", failed_all)
     m4.metric("Success Rate", f"{rate_all:.1f}%")
     render_charts(df, key_suffix="global")
+
 
 # --- 3. DETAILNÍ STATISTIKA PRO VYBRANÝ BĚH ---
 if selected_run:
