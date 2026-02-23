@@ -75,14 +75,42 @@ if "API" in platform:
                     st.json(row.to_dict())
 
     with tab_all:
-        # Použití sloupců, aby se seznam 180 testů zkrátil
+        # 1. Získáme všechny unikátní názvy testů
+        unikatni_testy = df_api['test_name'].unique()
+        
+        # 2. Zachováme 2 sloupce pro lepší rozložení na šířku
         cols = st.columns(2)
-        for i, (idx, row) in enumerate(df_api.iterrows()):
+        
+        for i, nazev in enumerate(unikatni_testy):
+            # Vyfiltrujeme všechny záznamy pro tento konkrétní test
+            data_testu = df_api[df_api['test_name'] == nazev]
+            
+            # Spočítáme statistiky pro složku, ať hned vidíte, jestli je uvnitř problém
+            celkem_v_testu = len(data_testu)
+            selhalo_v_testu = len(data_testu[data_testu['status'] == "Failed"])
+            
+            # Pokud ve složce aspoň jeden test selhal, dáme složce červený křížek
+            ikona_slozky = "❌" if selhalo_v_testu > 0 else "✅"
+            
             with cols[i % 2]:
-                ikona = "✅" if row['status'] == "Passed" else "❌"
-                with st.expander(f"{ikona} {row['test_name']}"):
-                    st.write(f"**Trvání:** {row['duration']}ms")
-                    st.json(row.to_dict())
+                # --- HLAVNÍ SLOŽKA PRO DANÝ NÁZEV TESTU ---
+                with st.expander(f"{ikona_slozky} 📁 {nazev} ({celkem_v_testu} běhů)"):
+                    
+                    # --- VÝPIS JEDNOTLIVÝCH BĚHŮ UVNITŘ SLOŽKY ---
+                    for _, row in data_testu.iterrows():
+                        ikona_behu = "✅" if row['status'] == "Passed" else "❌"
+                        
+                        # Ohraničený kontejner pro každý jednotlivý běh
+                        with st.container(border=True):
+                            st.write(f"**{ikona_behu} Běh ID:** `{row.get('run_id', 'N/A')}`")
+                            st.caption(f"Trvání: {row.get('duration', 0)}ms")
+                            
+                            if row['status'] == 'Failed':
+                                st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
+                            
+                            # Schováme JSON do dalšího tlačítka, aby složka nebyla zbytečně dlouhá
+                            with st.expander("Zobrazit JSON detail"):
+                                st.json(row.to_dict())
     
     st.stop() # Zabrání vykreslení kalendáře pod API reportem
 
