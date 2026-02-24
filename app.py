@@ -51,10 +51,8 @@ if "API" in platform:
     st.markdown(f"### ⚙️ In-App Shop Cart API Test Report")
     st.caption(f"Aktualizováno: {aktualni_cas}")
 
-    # Horní metriky (použití tvé komponenty)
     render_metrics(df_api)
 
-    # Rozdělení na záložky (Tabs), aby se v 180 testech dalo vyznat
     tab_summary, tab_failed, tab_all = st.tabs([
         "📊 Grafický přehled", 
         f"❌ Selhalo ({len(df_api[df_api['status'] == 'Failed'])})", 
@@ -65,31 +63,44 @@ if "API" in platform:
         render_charts(df_api, key_suffix="api_main")
 
     with tab_failed:
-        failed_tests = df_api[df_api['status'] == "Failed"]
-        if failed_tests.empty:
+        df_failed_only = df_api[df_api['status'] == "Failed"]
+        
+        if df_failed_only.empty:
             st.success("Žádné testy neselhaly! 🎉")
         else:
-            for _, row in failed_tests.iterrows():
-                with st.expander(f"❌ {row['test_name']} | {row['duration']}ms", expanded=True):
-                    st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
-                    st.json(row.to_dict())
+            unikatni_selhane_testy = df_failed_only['test_name'].unique()
+            cols = st.columns(2)
+            
+            for i, nazev in enumerate(unikatni_selhane_testy):
+                data_testu_selhani = df_failed_only[df_failed_only['test_name'] == nazev]
+                
+                pocet_selhani = len(data_testu_selhani)
+                
+                with cols[i % 2]:
+                    with st.expander(f"❌ 📁 {nazev} ({pocet_selhani} selhání)"):
+                        
+                        # --- VÝPIS JEDNOTLIVÝCH BĚHŮ UVNITŘ SLOŽKY ---
+                        for _, row in data_testu_selhani.iterrows():
+                            
+                            with st.container(border=True):
+                                st.write(f"**❌ Běh ID:** `{row.get('run_id', 'N/A')}`")
+                                st.caption(f"Trvání: {row.get('duration', 0)}ms")
+                                
+                                st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
+                                
+                                with st.expander("Zobrazit JSON detail"):
+                                    st.json(row.to_dict())
 
     with tab_all:
-        # 1. Získáme všechny unikátní názvy testů
         unikatni_testy = df_api['test_name'].unique()
-        
-        # 2. Zachováme 2 sloupce pro lepší rozložení na šířku
         cols = st.columns(2)
         
         for i, nazev in enumerate(unikatni_testy):
-            # Vyfiltrujeme všechny záznamy pro tento konkrétní test
             data_testu = df_api[df_api['test_name'] == nazev]
             
-            # Spočítáme statistiky pro složku, ať hned vidíte, jestli je uvnitř problém
             celkem_v_testu = len(data_testu)
             selhalo_v_testu = len(data_testu[data_testu['status'] == "Failed"])
             
-            # Pokud ve složce aspoň jeden test selhal, dáme složce červený křížek
             ikona_slozky = "❌" if selhalo_v_testu > 0 else "✅"
             
             with cols[i % 2]:
@@ -100,7 +111,6 @@ if "API" in platform:
                     for _, row in data_testu.iterrows():
                         ikona_behu = "✅" if row['status'] == "Passed" else "❌"
                         
-                        # Ohraničený kontejner pro každý jednotlivý běh
                         with st.container(border=True):
                             st.write(f"**{ikona_behu} Běh ID:** `{row.get('run_id', 'N/A')}`")
                             st.caption(f"Trvání: {row.get('duration', 0)}ms")
@@ -108,11 +118,10 @@ if "API" in platform:
                             if row['status'] == 'Failed':
                                 st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
                             
-                            # Schováme JSON do dalšího tlačítka, aby složka nebyla zbytečně dlouhá
                             with st.expander("Zobrazit JSON detail"):
                                 st.json(row.to_dict())
     
-    st.stop() # Zabrání vykreslení kalendáře pod API reportem
+    st.stop() 
 
 # =================================================================
 # SEKCE 2: MOBILNÍ TESTY (Android / iOS)
@@ -157,7 +166,9 @@ with col_info:
 
 st.divider()
 
-# --- GLOBÁLNÍ HISTORIE ---
+# =================================================================
+# SEKCE 3: STATISTIKA A DETAILY PRO GLOBALNÍ BĚH A PRO VYBRANÝ BĚH
+# =================================================================
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
@@ -194,7 +205,6 @@ if selected_run:
                         st.error(f"Chyba: {row['error_msg']}")
                 with col2:
                     if row['status'] == "Failed":
-                        # Cesta k obrázku (předpokládá název fail_ID.png)
                         img_path = os.path.join(row['folder_path'], f"fail_{row['test_id']}.png")
                         if os.path.exists(img_path):
                             st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
