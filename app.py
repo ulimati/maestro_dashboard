@@ -28,12 +28,16 @@ with head_col:
 
 with icon_col:
     st.write("")
+    # Použití session_state pro pamatování vybrané platformy
+    if "selected_platform" not in st.session_state:
+        st.session_state.selected_platform = "🤖 Android"
+        
     platform = st.radio(
         "Platforma:",
         ["🤖 Android", "🍎 iOS", "⚙️ API"],
         horizontal=True,
         label_visibility="collapsed",
-        key="platform_selector"
+        key="selected_platform" # Streamlit automaticky aktualizuje session_state
     )
 
 # =================================================================
@@ -60,6 +64,7 @@ if "API" in platform:
     ])
 
     with tab_summary:
+        # Tady neřešíme klikání, necháme to tak, jak to bylo
         render_charts(df_api, key_suffix="api_main")
 
     with tab_failed:
@@ -137,8 +142,34 @@ df['date'] = df['run_id'].str[:10]
 # --- KALENDÁŘ A VÝBĚR DNE ---
 col_cal, col_info, _ = st.columns([0.7, 1, 1])
 
+# 1. Zajištění uložení vybraného data ve st.session_state
+if 'selected_date' not in st.session_state:
+    st.session_state.selected_date = df['date'].max()
+
+# 2. Získání kliknutí PŘED vykreslením kalendáře
+if "maestro_calendar" in st.session_state and st.session_state.maestro_calendar:
+    cal_state = st.session_state.maestro_calendar
+    if cal_state.get("dateClick"):
+        raw_date = pd.to_datetime(cal_state["dateClick"]["date"]) + pd.Timedelta(hours=12)
+        st.session_state.selected_date = raw_date.strftime('%Y-%m-%d')
+    elif cal_state.get("eventClick"):
+        raw_date = pd.to_datetime(cal_state["eventClick"]["event"]["start"]) + pd.Timedelta(hours=12)
+        st.session_state.selected_date = raw_date.strftime('%Y-%m-%d')
+
+selected_date = st.session_state.selected_date
+
 with col_cal:
+    # Tvé původní červené tečky pro dny s testy
     events = [{"title": "", "start": d, "display": "block", "color": "#ff453a"} for d in df['date'].unique()]
+    
+    # NOVÉ: Nativní obarvení pozadí vybraného dne do šeda
+    if selected_date:
+        events.append({
+            "start": selected_date,
+            "display": "background",
+            "backgroundColor": "#3984de" # Zde je tvá šedá barva
+        })
+
     cal_options = {
         "headerToolbar": {"left": "prev", "center": "title", "right": "next"},
         "initialView": "dayGridMonth",
@@ -148,27 +179,47 @@ with col_cal:
     }
     state = calendar(events=events, options=cal_options, key="maestro_calendar")
 
-# Logika výběru data
-if state.get("dateClick"):
-    raw_date = pd.to_datetime(state["dateClick"]["date"]) + pd.Timedelta(hours=12)
-    selected_date = raw_date.strftime('%Y-%m-%d')
-elif state.get("eventClick"):
-    raw_date = pd.to_datetime(state["eventClick"]["event"]["start"]) + pd.Timedelta(hours=12)
-    selected_date = raw_date.strftime('%Y-%m-%d')
-else:
-    selected_date = df['date'].max()
-
 available_runs = sorted(df[df['date'] == selected_date]['run_id'].unique(), reverse=True)
 selected_run = None
 with col_info:
     st.subheader(f"📅 Běhy pro: {selected_date}")
-    selected_run = st.selectbox("Vyberte konkrétní testovací běh:", available_runs if available_runs else ["Žádné běhy"])
-
+    selected_run = st.selectbox("Vyberte konkrétní testovací běh:", available_runs if available_runs else ["Žádné běhy"],
+    key="selectbox_vyber_behu"
+    )
 st.divider()
 
 # =================================================================
 # SEKCE 3: STATISTIKA A DETAILY PRO GLOBALNÍ BĚH A PRO VYBRANÝ BĚH
 # =================================================================
+
+# --- Pomocná funkce pro zobrazení složek testů (použitelná na více místech) ---
+def zobrazeni_slozek_testu(data_k_zobrazeni):
+    unikatni_testy = data_k_zobrazeni['test_name'].unique()
+    cols = st.columns(2)
+    
+    # Seřazení, aby indexy odpovídaly
+    data_k_zobrazeni = data_k_zobrazeni.reset_index(drop=True)
+    
+    for i, nazev in enumerate(unikatni_testy):
+        data_testu = data_k_zobrazeni[data_k_zobrazeni['test_name'] == nazev]
+        
+        celkem_v_testu = len(data_testu)
+        selhalo_v_testu = len(data_testu[data_testu['status'] == "Failed"])
+        
+        # Určení ikony a nadpisu
+        ikona = "❌" if selhalo_v_testu > 0 else "✅"
+        popis = "selhání" if selhalo_v_testu > 0 else "běhů"
+        
+        with cols[i % 2]:
+            with st.expander(f"{ikona} 📁 {nazev} ({celkem_v_testu} {popis})"):
+                for _, row in data_testu.iterrows():
+                    stav_ikona = "✅" if row['status'] == "Passed" else "❌"
+                    st.write(f"**{stav_ikona} {row.get('run_id', 'N/A')}** | {row.get('duration', 0)}s")
+                    
+                    if row['status'] == "Failed":
+                        st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
+                        # Zde můžeš přidat screenshoty nebo logy, pokud jsou k dispozici
+
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
@@ -182,34 +233,82 @@ with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
     m2.metric("Úspěšné", passed_all)
     m3.metric("Selhalo", failed_all)
     m4.metric("Success Rate", f"{rate_all:.1f}%")
-    render_charts(df, key_suffix="global")
+
+    kliknuty_stav_global = render_charts(df, key_suffix="global")
+
+    if kliknuty_stav_global:
+       st.divider()
+       st.subheader(f"Vysledky pro stav: {kliknuty_stav_global}")
+       df_filtered_global = df[df['status'] == kliknuty_stav_global]
+       zobrazeni_slozek_testu(df_filtered_global)
 
 
-# --- 3. DETAILNÍ STATISTIKA PRO VYBRANÝ BĚH ---
-if selected_run:
-    st.divider()
-    with st.expander(f"🔎 DETAIL BĚHU: {selected_run}", expanded=True):
-        run_df = df[df['run_id'] == selected_run].copy()
-        render_metrics(run_df)
-        render_charts(run_df, key_suffix="single_run")
+# =================================================================
+# SEKCE 3: STATISTIKA A DETAILY PRO VYBRANÝ DEN
+# =================================================================
+
+st.divider()
+
+if selected_date:
+    st.subheader(f"📊 Přehled všech testů pro den: {selected_date}")
+    
+    day_df = df[df['date'] == selected_date].copy()
+    
+    if day_df.empty:
+        st.info(f"Pro den {selected_date} nejsou k dispozici žádné testy.")
+    else:
+        render_metrics(day_df)
+        
+        # Vykreslení grafů a zachycení kliknutí
+        kliknuty_stav_den = render_charts(day_df, key_suffix="vybrany_den")
         
         st.divider()
-        st.subheader("Kroky testu")
-        for i, row in run_df.iterrows():
-            status_icon = "✅" if row['status'] == "Passed" else "🔴"
-            with st.expander(f"{status_icon} {row['test_name']} | {row['duration']}s"):
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.write(f"**Stav:** {row['status']}")
-                    if row['status'] == "Failed":
-                        st.error(f"Chyba: {row['error_msg']}")
-                with col2:
-                    if row['status'] == "Failed":
-                        img_path = os.path.join(row['folder_path'], f"fail_{row['test_id']}.png")
-                        if os.path.exists(img_path):
-                            st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
-                        else:
-                            st.info(f"Snímek nenalezen v: {img_path}")
+        
+        # Zobrazení složek testů AŽ PO KLIKNUTÍ na výseč v grafu
+        if kliknuty_stav_den:
+            st.subheader(f"Kroky testu: {kliknuty_stav_den}")
+            
+            # 1. Filtrujeme data podle toho, zda se kliklo na Passed nebo Failed
+            day_df_filtered = day_df[day_df['status'] == kliknuty_stav_den]
+            
+            # 2. Zjistíme unikátní názvy testů, abychom je mohli seskupit do složek
+            unikatni_testy = day_df_filtered['test_name'].unique()
+            
+            # Vytvoření dvou sloupců vedle sebe
+            cols = st.columns(2)
+            
+            # 3. Procházíme testy po názvech (nikoliv po jednotlivých bězích!)
+            for i, nazev_testu in enumerate(unikatni_testy):
                 
-                log_content = get_log_content(row['folder_path'], "console_output.log")
-                st.code("".join(log_content), language="log")
+                # Získáme všechny běhy pro tento konkrétní test
+                data_testu = day_df_filtered[day_df_filtered['test_name'] == nazev_testu]
+                pocet_behu = len(data_testu)
+                
+                status_icon = "✅" if kliknuty_stav_den == "Passed" else "❌"
+                
+                # Střídáme levý a pravý sloupec
+                with cols[i % 2]:
+                    # ZDE JE TA ZMĚNA: Název složky teď vypadá přesně jako na screenshotu (9 běhů)
+                    with st.expander(f"{status_icon} 📁 {nazev_testu} ({pocet_behu} běhů)"):
+                        
+                        # Až tady uvnitř složky vypíšeme jednotlivé běhy
+                        for _, row in data_testu.iterrows():
+                            beh_id = row['run_id'].split('_')[1] if '_' in row['run_id'] else row['run_id']
+                            
+                            st.write(f"**Běh ID: {beh_id}** | Doba: {row['duration']}s")
+                            
+                            if row['status'] == "Failed":
+                                st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
+                                
+                                img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_id', '')}.png")
+                                if os.path.exists(img_path):
+                                    st.image(img_path, caption=f"Snímek chyby")
+                            
+                            log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
+                            if log_content:
+                                st.code("".join(log_content), language="log")
+                                
+                            st.divider() # Malá čára oddělující jednotlivé běhy uvnitř složky
+                            
+        else:
+            st.info("👆 Pro zobrazení detailních kroků testu pro tento den klikněte na zelenou (Passed) nebo červenou (Failed) část grafu výše.")

@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+from streamlit_plotly_events import plotly_events
 
 def render_metrics(df):
     """Vykreslí základní metriky testů."""
@@ -14,35 +15,57 @@ def render_metrics(df):
     c3.metric("Průměrná doba", f"{avg_time:.2f}s")
 
 def render_charts(df, key_suffix=""):
-    """Vykreslí grafy s unikátním klíčem pro zamezení chybám."""
+    if df.empty:
+        return None
+
     col1, col2 = st.columns(2)
-    
+
+    # unikátní klíč pro session_state
+    clicked_key = f"clicked_status_{key_suffix}"
+    if clicked_key not in st.session_state:
+        st.session_state[clicked_key] = None
+
+    # --- Pie chart: poměr Passed/Failed ---
     with col1:
-        # Koláčový graf úspěšnosti
+        # počítáme přesně z tohoto df
+        passed_count = len(df[df['status'] == 'Passed'])
+        failed_count = len(df[df['status'] == 'Failed'])
+
         fig_pie = px.pie(
-            df, 
-            names='status', 
+            names=['Passed', 'Failed'],
+            values=[passed_count, failed_count],
             title="Poměr úspěšnosti",
-            color='status', 
+            color=['Passed', 'Failed'],
             color_discrete_map={'Passed': '#2ecc71', 'Failed': '#e74c3c'},
             hole=0.4
         )
-        # Přidán unikátní klíč 'key'
-        st.plotly_chart(fig_pie, use_container_width=True, key=f"pie_{key_suffix}")
-    
-    with col2:
-        # Sloupcový graf průměrných časů pro každý název testu
-        avg_times = df.groupby('test_name')['duration'].mean().reset_index()
-        fig_bar = px.bar(
-            avg_times, 
-            x='test_name', 
-            y='duration', 
-            title="Průměrná doba testů (s)",
-            labels={'test_name': 'Název testu', 'duration': 'Čas (s)'}
+
+        event = plotly_events(
+            fig_pie,
+            click_event=True,
+            hover_event=False,
+            key=f"pie_{key_suffix}"
         )
-        fig_bar.update_traces(marker_color='#3498db')
-        # Přidán unikátní klíč 'key'
-        st.plotly_chart(fig_bar, use_container_width=True, key=f"bar_{key_suffix}")
+
+        if event:
+            point_index = event[0].get("pointNumber")
+            if point_index is not None:
+                st.session_state[clicked_key] = ['Passed', 'Failed'][point_index]
+
+    # --- Bar chart: průměrné doby pro testy v této složce ---
+    with col2:
+        avg_times = df.groupby('test_name')['duration'].mean().reset_index()
+
+        fig_bar = px.bar(
+            avg_times,
+            x='test_name',
+            y='duration',
+            title="Průměrná doba testů (s)"
+        )
+
+        st.plotly_chart(fig_bar, use_container_width=True)
+
+    return st.session_state[clicked_key]
 
 def highlight_logs(lines):
     """Vykreslí řádky logu s barevným zvýrazněním chyb."""
