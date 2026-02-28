@@ -243,72 +243,53 @@ with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
        zobrazeni_slozek_testu(df_filtered_global)
 
 
-# =================================================================
-# SEKCE 3: STATISTIKA A DETAILY PRO VYBRANÝ DEN
-# =================================================================
-
-st.divider()
-
-if selected_date:
-    st.subheader(f"📊 Přehled všech testů pro den: {selected_date}")
-    
-    day_df = df[df['date'] == selected_date].copy()
-    
-    if day_df.empty:
-        st.info(f"Pro den {selected_date} nejsou k dispozici žádné testy.")
-    else:
-        render_metrics(day_df)
+# --- 3. DETAILNÍ STATISTIKA PRO VYBRANÝ BĚH ---
+if selected_run and selected_run != "Žádné běhy":
+    st.divider()
+    with st.expander(f"🔎 DETAIL BĚHU: {selected_run}", expanded=True):
+        run_df = df[df['run_id'] == selected_run].copy()
         
-        # Vykreslení grafů a zachycení kliknutí
-        kliknuty_stav_den = render_charts(day_df, key_suffix="vybrany_den")
+        render_metrics(run_df)
+        
+        # Zachytíme kliknutí pro tento konkrétní běh
+        kliknuty_stav_single = render_charts(run_df, key_suffix="single_run")
         
         st.divider()
         
-        # Zobrazení složek testů AŽ PO KLIKNUTÍ na výseč v grafu
-        if kliknuty_stav_den:
-            st.subheader(f"Kroky testu: {kliknuty_stav_den}")
+        if kliknuty_stav_single:
+            st.subheader(f"Kroky testu: {kliknuty_stav_single}")
             
-            # 1. Filtrujeme data podle toho, zda se kliklo na Passed nebo Failed
-            day_df_filtered = day_df[day_df['status'] == kliknuty_stav_den]
+            # FILTRACE: Vybereme pouze testy, které odpovídají kliknutí
+            run_df_filtered = run_df[run_df['status'] == kliknuty_stav_single]
             
-            # 2. Zjistíme unikátní názvy testů, abychom je mohli seskupit do složek
-            unikatni_testy = day_df_filtered['test_name'].unique()
+            # Resetujeme index, aby nám správně fungovalo střídání sloupců (0, 1, 2, 3...)
+            run_df_filtered = run_df_filtered.reset_index(drop=True)
             
-            # Vytvoření dvou sloupců vedle sebe
+            # Vytvoření dvou sloupců pro samotné složky
             cols = st.columns(2)
             
-            # 3. Procházíme testy po názvech (nikoliv po jednotlivých bězích!)
-            for i, nazev_testu in enumerate(unikatni_testy):
+            for i, row in run_df_filtered.iterrows():
+                status_icon = "✅" if row['status'] == "Passed" else "❌"
                 
-                # Získáme všechny běhy pro tento konkrétní test
-                data_testu = day_df_filtered[day_df_filtered['test_name'] == nazev_testu]
-                pocet_behu = len(data_testu)
-                
-                status_icon = "✅" if kliknuty_stav_den == "Passed" else "❌"
-                
-                # Střídáme levý a pravý sloupec
+                # Střídáme levý (cols[0]) a pravý (cols[1]) sloupec
                 with cols[i % 2]:
-                    # ZDE JE TA ZMĚNA: Název složky teď vypadá přesně jako na screenshotu (9 běhů)
-                    with st.expander(f"{status_icon} 📁 {nazev_testu} ({pocet_behu} běhů)"):
+                    with st.expander(f"{status_icon} 📁 {row['test_name']} | {row['duration']}s"):
                         
-                        # Až tady uvnitř složky vypíšeme jednotlivé běhy
-                        for _, row in data_testu.iterrows():
-                            beh_id = row['run_id'].split('_')[1] if '_' in row['run_id'] else row['run_id']
+                        # -- Obsah uvnitř rozkliknuté složky --
+                        st.write(f"**Stav:** {row['status']}")
+                        
+                        if row['status'] == "Failed":
+                            st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
                             
-                            st.write(f"**Běh ID: {beh_id}** | Doba: {row['duration']}s")
+                            img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_id', '')}.png")
+                            if os.path.exists(img_path):
+                                st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
+                            else:
+                                st.info(f"Snímek nenalezen v: {img_path}")
+                        
+                        log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
+                        if log_content:
+                            st.code("".join(log_content), language="log")
+                        else:
+                            st.info("Log soubor nenalezen nebo je prázdný.")
                             
-                            if row['status'] == "Failed":
-                                st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
-                                
-                                img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_id', '')}.png")
-                                if os.path.exists(img_path):
-                                    st.image(img_path, caption=f"Snímek chyby")
-                            
-                            log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
-                            if log_content:
-                                st.code("".join(log_content), language="log")
-                                
-                            st.divider() # Malá čára oddělující jednotlivé běhy uvnitř složky
-                            
-        else:
-            st.info("👆 Pro zobrazení detailních kroků testu pro tento den klikněte na zelenou (Passed) nebo červenou (Failed) část grafu výše.")
