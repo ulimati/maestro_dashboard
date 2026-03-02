@@ -8,6 +8,45 @@ from src.components import render_metrics, render_charts
 
 st.set_page_config(page_title="Maestro Fix", layout="wide")
 
+# --- ÚVODNÍ STRÁNKA + VW tlacitko ---
+if "show_dashboard" not in st.session_state:
+    st.session_state.show_dashboard = False
+
+if "show_empty" not in st.session_state:
+    st.session_state.show_empty = False
+
+if not st.session_state.show_dashboard and not st.session_state.show_empty:
+
+    st.markdown("""
+        <div style="text-align: center; padding: 80px 0;">
+            <h1 style="font-size: 3rem;">Project</h1>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3, col4, col5 = st.columns([2, 4, 1, 4, 2])
+    with col2:
+        if st.button("Volkswagen", use_container_width=True):
+            st.session_state.show_dashboard = True
+            st.rerun()
+    with col4:
+        if st.button("Škoda", use_container_width=True):
+            st.session_state.show_empty = True
+            st.rerun()
+    st.stop()
+
+# --- druhe tlacitko SKODA---
+if st.session_state.show_empty:
+    if st.button("Zpět"):
+        st.session_state.show_empty = False
+        st.rerun()
+    st.title("Škoda")
+    st.info("Tato část je prázdná. Zde může být obsah pro Škoda projekt.")
+    st.stop()
+
+if st.button("Zpět"):
+    st.session_state.show_dashboard = False
+    st.rerun()
+
 # --- CSS PRO KALENDÁŘ A UI ---
 st.markdown("""
 <style>
@@ -34,15 +73,13 @@ with icon_col:
         
     platform = st.radio(
         "Platforma:",
-        ["🤖 Android", "🍎 iOS", "⚙️ API"],
+        ["Android", "iOS", "API"],
         horizontal=True,
         label_visibility="collapsed",
         key="selected_platform" # Streamlit automaticky aktualizuje session_state
     )
 
-# =================================================================
 # SEKCE 1: API TEST REPORT (Zobrazí se jen při volbě API)
-# =================================================================
 if "API" in platform:
     st.divider()
     df_api = get_all_test_data("⚙️ API")
@@ -57,80 +94,57 @@ if "API" in platform:
 
     render_metrics(df_api)
 
-    tab_summary, tab_failed, tab_all = st.tabs([
+    tab_summary, tab_all = st.tabs([
         "📊 Grafický přehled", 
-        f"❌ Selhalo ({len(df_api[df_api['status'] == 'Failed'])})", 
         f"📑 Všechny výsledky ({len(df_api)})"
     ])
 
     with tab_summary:
-        # Tady neřešíme klikání, necháme to tak, jak to bylo
-        render_charts(df_api, key_suffix="api_main")
-
-    with tab_failed:
-        df_failed_only = df_api[df_api['status'] == "Failed"]
+        kliknuty_stav_api = render_charts(df_api, key_suffix="api_main")
         
-        if df_failed_only.empty:
-            st.success("Žádné testy neselhaly! 🎉")
-        else:
-            unikatni_selhane_testy = df_failed_only['test_name'].unique()
+        if kliknuty_stav_api:
+            st.divider()
+            st.markdown(f"### Výsledky pro stav: {kliknuty_stav_api}")
+            df_filtered_api = df_api[df_api['status'] == kliknuty_stav_api]
+            unikatni_testy = df_filtered_api['test_name'].unique()
             cols = st.columns(2)
-            
-            for i, nazev in enumerate(unikatni_selhane_testy):
-                data_testu_selhani = df_failed_only[df_failed_only['test_name'] == nazev]
-                
-                pocet_selhani = len(data_testu_selhani)
-                
+            for i, nazev in enumerate(unikatni_testy):
+                data_testu = df_filtered_api[df_filtered_api['test_name'] == nazev]
                 with cols[i % 2]:
-                    with st.expander(f"❌ 📁 {nazev} ({pocet_selhani} selhání)"):
-                        
-                        # --- VÝPIS JEDNOTLIVÝCH BĚHŮ UVNITŘ SLOŽKY ---
-                        for _, row in data_testu_selhani.iterrows():
-                            
+                    ikona_slozky = "❌" if (data_testu['status'] == 'Failed').any() else "✅"
+                    with st.expander(f"{ikona_slozky} 📁 {nazev} ({len(data_testu)} výsledků)"):
+                        for _, row in data_testu.iterrows():
+                            ikona = "✅" if row['status'] == "Passed" else "❌"
                             with st.container(border=True):
-                                st.write(f"**❌ Běh ID:** `{row.get('run_id', 'N/A')}`")
-                                st.caption(f"Trvání: {row.get('duration', 0)}ms")
-                                
-                                st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
-                                
+                                st.write(f"**{ikona} Běh ID:** `{row.get('run_id', 'N/A')}`")
+                                st.caption(f"Trvání: {row.get('duration', 0)}s")
+                                if row['status'] == 'Failed':
+                                    st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
                                 with st.expander("Zobrazit JSON detail"):
                                     st.json(row.to_dict())
 
     with tab_all:
         unikatni_testy = df_api['test_name'].unique()
         cols = st.columns(2)
-        
         for i, nazev in enumerate(unikatni_testy):
             data_testu = df_api[df_api['test_name'] == nazev]
-            
             celkem_v_testu = len(data_testu)
             selhalo_v_testu = len(data_testu[data_testu['status'] == "Failed"])
-            
             ikona_slozky = "❌" if selhalo_v_testu > 0 else "✅"
-            
             with cols[i % 2]:
-                # --- HLAVNÍ SLOŽKA PRO DANÝ NÁZEV TESTU ---
                 with st.expander(f"{ikona_slozky} 📁 {nazev} ({celkem_v_testu} běhů)"):
-                    
-                    # --- VÝPIS JEDNOTLIVÝCH BĚHŮ UVNITŘ SLOŽKY ---
                     for _, row in data_testu.iterrows():
                         ikona_behu = "✅" if row['status'] == "Passed" else "❌"
-                        
                         with st.container(border=True):
                             st.write(f"**{ikona_behu} Běh ID:** `{row.get('run_id', 'N/A')}`")
-                            st.caption(f"Trvání: {row.get('duration', 0)}ms")
-                            
+                            st.caption(f"Trvání: {row.get('duration', 0)}s")
                             if row['status'] == 'Failed':
                                 st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
-                            
                             with st.expander("Zobrazit JSON detail"):
                                 st.json(row.to_dict())
-    
-    st.stop() 
 
-# =================================================================
+
 # SEKCE 2: MOBILNÍ TESTY (Android / iOS)
-# =================================================================
 df = get_all_test_data(platform)
 
 if df.empty:
@@ -188,25 +202,18 @@ with col_info:
     )
 st.divider()
 
-# =================================================================
 # SEKCE 3: STATISTIKA A DETAILY PRO GLOBALNÍ BĚH A PRO VYBRANÝ BĚH
-# =================================================================
 
 # --- Pomocná funkce pro zobrazení složek testů (použitelná na více místech) ---
 def zobrazeni_slozek_testu(data_k_zobrazeni):
     unikatni_testy = data_k_zobrazeni['test_name'].unique()
     cols = st.columns(2)
-    
-    # Seřazení, aby indexy odpovídaly
     data_k_zobrazeni = data_k_zobrazeni.reset_index(drop=True)
     
     for i, nazev in enumerate(unikatni_testy):
         data_testu = data_k_zobrazeni[data_k_zobrazeni['test_name'] == nazev]
-        
         celkem_v_testu = len(data_testu)
         selhalo_v_testu = len(data_testu[data_testu['status'] == "Failed"])
-        
-        # Určení ikony a nadpisu
         ikona = "❌" if selhalo_v_testu > 0 else "✅"
         popis = "selhání" if selhalo_v_testu > 0 else "běhů"
         
@@ -218,8 +225,15 @@ def zobrazeni_slozek_testu(data_k_zobrazeni):
                     
                     if row['status'] == "Failed":
                         st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
-                        # Zde můžeš přidat screenshoty nebo logy, pokud jsou k dispozici
-
+                        
+                        img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_name', '')}.png")
+                        if os.path.exists(img_path):
+                            st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
+                        
+                    log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
+                    if log_content:
+                        with st.expander("Zobrazit log"):
+                            st.code("".join(log_content), language="log")
 
 # --- 2. GLOBÁLNÍ STATISTIKA ---
 with st.expander("📊 GLOBÁLNÍ HISTORIE (CELÁ PLATFORMA)", expanded=True):
@@ -248,9 +262,16 @@ if selected_run and selected_run != "Žádné běhy":
     st.divider()
     with st.expander(f"🔎 DETAIL BĚHU: {selected_run}", expanded=True):
         run_df = df[df['run_id'] == selected_run].copy()
-        
-        render_metrics(run_df)
-        
+
+        passed_run = len(run_df[run_df['status'] == "Passed"])
+        failed_run = len(run_df[run_df['status'] == "Failed"])
+
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Celkem testů", len(run_df))
+        m2.metric("Úspěšné", passed_run)
+        m3.metric("Selhalo", failed_run)
+        m4.metric("Success Rate", f"{(passed_run / len(run_df) * 100):.1f}%")
+
         # Zachytíme kliknutí pro tento konkrétní běh
         kliknuty_stav_single = render_charts(run_df, key_suffix="single_run")
         
@@ -281,15 +302,12 @@ if selected_run and selected_run != "Žádné běhy":
                         if row['status'] == "Failed":
                             st.error(f"Chyba: {row.get('error_msg', 'Neznámá chyba')}")
                             
-                            img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_id', '')}.png")
+                            img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_name', '')}.png")
                             if os.path.exists(img_path):
                                 st.image(img_path, caption=f"Snímek chyby - {row['test_name']}")
-                            else:
-                                st.info(f"Snímek nenalezen v: {img_path}")
                         
                         log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
                         if log_content:
-                            st.code("".join(log_content), language="log")
-                        else:
-                            st.info("Log soubor nenalezen nebo je prázdný.")
-                            
+                            with st.expander("Zobrazit log"):
+                                st.code("".join(log_content), language="log")
+st.stop()

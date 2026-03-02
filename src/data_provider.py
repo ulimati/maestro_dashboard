@@ -4,30 +4,78 @@ import xml.etree.ElementTree as ET
 import json
 import streamlit as st
 
-@st.cache_data
+@st.cache_data(ttl=600)
 def get_all_test_data(platform_selection):
-    """
-    Načte data z XML a JSON reportů na základě zvolené platformy.
-    Očekává strukturu: logs/logs_android/... nebo logs/logs_ios/...
-    """
     data = []
     
-    # Dynamické určení složky podle ikony v radio buttonu
+    # API platform - čte z logs/json
+    if "API" in platform_selection:
+        json_dir = os.path.join("logs", "json")
+        if not os.path.exists(json_dir):
+            return pd.DataFrame()
+        
+        for file in os.listdir(json_dir):
+            if not file.endswith(".json"):
+                continue
+            
+            json_path = os.path.join(json_dir, file)
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    json_data = json.load(f)
+                
+                # JSON je list, bereme první prvek
+                if isinstance(json_data, list) and len(json_data) > 0:
+                    item = json_data[0]
+                else:
+                    continue
+                
+                # run_id z názvu souboru (datum+čas)
+                run_id = file[:13]  # "20260217_0828"
+                
+                # Procházení jednotlivých výsledků testů
+                for result in item.get("results", []):
+                    test_name = result.get("name", file)
+                    status = "Passed" if result.get("status") == "pass" else "Failed"
+                    duration = round(result.get("runDuration", 0), 3)
+                    
+                    # Chybová zpráva z testResults
+                    error_msg = ""
+                    for test_result in result.get("testResults", []):
+                        if test_result.get("status") == "fail":
+                            error_msg = test_result.get("description", "")
+                            break
+                    
+                    # HTTP status z response
+                    response = result.get("response", {})
+                    http_status = response.get("status", "")
+                    
+                    data.append({
+                        "run_id": run_id,
+                        "test_id": file.replace(".json", ""),
+                        "test_name": test_name,
+                        "status": status,
+                        "duration": duration,
+                        "error_msg": error_msg,
+                        "http_status": http_status,
+                        "folder_path": json_dir
+                    })
+            except Exception as e:
+                print(f"Chyba při parsování {json_path}: {e}")
+        
+        return pd.DataFrame(data)
+    
+    # Android / iOS - čte z logs/logs_android nebo logs/logs_ios
     folder_name = "logs_android" if "Android" in platform_selection else "logs_ios"
     logs_dir = os.path.join("logs", folder_name)
     
     if not os.path.exists(logs_dir):
         return pd.DataFrame()
 
-    # Procházení jednotlivých běhů (složek s časovou značkou)
     for run_id in os.listdir(logs_dir):
         run_path = os.path.join(logs_dir, run_id)
         
         if os.path.isdir(run_path):
-            # Procházení souborů v daném běhu
             for file in os.listdir(run_path):
-                
-                # --- ZPRACOVÁNÍ XML ---
                 if file.endswith(".xml"):
                     xml_path = os.path.join(run_path, file)
                     try:
@@ -55,38 +103,9 @@ def get_all_test_data(platform_selection):
                     except Exception as e:
                         print(f"Chyba při parsování {xml_path}: {e}")
 
-                # --- ZPRACOVÁNÍ JSON ---
-                elif file.endswith(".json"):
-                    json_path = os.path.join(run_path, file)
-                    try:
-                        # Opraveno na json.load()
-                        with open(json_path, "r", encoding="utf-8") as f:
-                            json_data = json.load(f)
-
-                            # Opraveno odstraňování přípony .json
-                            test_id = file.replace("report_", "").replace(".json", "")
-                            test_name = json_data.get("name", file)
-
-                            total_tests = int(json_data.get("totalTests",0))
-                            passed_tests = int(json_data.get("passedTests",0))
-                            failed_tests = int(json_data.get("failedTests",0))
-
-                            data.append({
-                                "run_id": run_id,
-                                "test_id": test_id,
-                                "test_name": test_name,
-                                "status": status,
-                                "duration": duration,
-                                "error_msg": error_msg,
-                                "folder_path": run_path
-                            })
-                    except Exception as e:
-                        print(f"Chyba při parsování {json_path}: {e}") # Opraven výpis proměnné
-
     return pd.DataFrame(data)
 
 def get_log_content(folder_path, filename):
-    """Načte obsah logu pro detail testu."""
     file_path = os.path.join(folder_path, filename)
     if not os.path.exists(file_path):
         return [f"Soubor {filename} nebyl nalezen."]
