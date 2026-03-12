@@ -8,6 +8,7 @@ sys.modules["streamlit_plotly_events"] = MagicMock()
 import pandas as pd
 from src.components import render_metrics, render_charts, highlight_logs
 
+#render_metrics - success rate je 75%
 def test_success_rate_is_75_percent():
     df = pd.DataFrame([
         {"status": "Passed", "duration": 1.0},
@@ -19,20 +20,20 @@ def test_success_rate_is_75_percent():
     total = len(df)
     passed = len(df[df["status"] == "Passed"])
     rate = (passed / total * 100)
-
     assert rate == 75.0
 
 
+#render_metrics - success rate is 0 when DataFrame is empty
 def test_success_rate_empty_dataframe():
     df = pd.DataFrame(columns=["status", "duration"])
 
     total = len(df)
     passed = len(df[df["status"] == "Passed"])
     rate = (passed / total * 100) if total > 0 else 0
-
     assert rate == 0
 
 
+#render_metrics - average duration is correct
 def test_average_duration():
     df = pd.DataFrame([
         {"status": "Passed", "duration": 2.0},
@@ -40,10 +41,10 @@ def test_average_duration():
     ])
 
     avg_duration = df["duration"].mean()
-
     assert avg_duration == 3.0
 
 
+#render_charts - returns None when nothing is selected
 def test_render_charts_returns_none_when_nothing_selected():
     df = pd.DataFrame([
         {"status": "Passed", "duration": 1.0, "test_name": "Test1"},
@@ -55,10 +56,18 @@ def test_render_charts_returns_none_when_nothing_selected():
     mock_st.selectbox.return_value = "— Select status —"
     mock_st.columns.return_value = [MagicMock(), MagicMock()]
     result = render_charts(df, key_suffix="test")
-    
     assert result == None
 
 
+#render_charts - returns None when DataFrame is empty
+def test_render_charts_returns_none_when_empty_dataframe():
+    df = pd.DataFrame(columns=["status", "duration", "test_name"])
+    
+    result = render_charts(df, key_suffix="test")
+    assert result == None
+
+
+#render_charts - returns selected status "Failed"
 def test_render_charts_returns_selected_status():
     df = pd.DataFrame([
         {"status": "Passed", "duration": 1.0, "test_name": "Test1"},
@@ -70,10 +79,25 @@ def test_render_charts_returns_selected_status():
     mock_st.selectbox.return_value = "Failed"
     
     result = render_charts(df, key_suffix="test")
-    
     assert result == "Failed"
 
 
+#render_charts - returns selected status "Passed"
+def test_render_charts_returns_passed_status():
+    df = pd.DataFrame([
+        {"status": "Passed", "duration": 1.0, "test_name": "Test1"},
+        {"status": "Failed", "duration": 2.0, "test_name": "Test2"},
+    ])
+    
+    mock_st = sys.modules["streamlit"]
+    mock_st.columns.return_value = [MagicMock(), MagicMock()]
+    mock_st.selectbox.return_value = "Passed"
+    
+    result = render_charts(df, key_suffix="test")
+    assert result == "Passed"
+
+
+#highlight_logs - error lines contain "ERROR"
 def test_error_line_is_red():
     mock_st = sys.modules["streamlit"]
     mock_st.reset_mock()
@@ -81,9 +105,10 @@ def test_error_line_is_red():
     highlight_logs(["ERROR: something broke\n"])
     
     call_args = mock_st.markdown.call_args[0][0]
-    assert "ERROR" in call_args
+    assert "#ff4b4b" in call_args
 
 
+#highlight_logs - warn lines contain "WARN"
 def test_warn_line_is_orange():
     mock_st = sys.modules["streamlit"]
     mock_st.reset_mock()
@@ -94,6 +119,7 @@ def test_warn_line_is_orange():
     assert "#ffa500" in call_args
 
 
+#highlight_logs - normal lines do not contain color spans
 def test_normal_line_has_no_color():
     mock_st = sys.modules["streamlit"]
     mock_st.reset_mock()
@@ -104,6 +130,7 @@ def test_normal_line_has_no_color():
     assert "<span" not in call_args
 
 
+#highlight_logs - empty log shows info
 def test_empty_log_shows_info():
     mock_st = sys.modules["streamlit"]
     mock_st.reset_mock()
@@ -111,3 +138,39 @@ def test_empty_log_shows_info():
     highlight_logs([])
     
     mock_st.info.assert_called_once_with("Log is empty.")
+
+
+#highlight_logs - fatal lines contain "FATAL"
+def test_fatal_line_is_red():
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+
+    highlight_logs(["FATAL: something went very wrong\n"])
+
+    call_args = mock_st.markdown.call_args[0][0]
+    assert "#ff4b4b" in call_args
+
+
+#highlight_logs - exception lines contain "EXCEPTION"
+def test_exception_line_is_red():
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+
+    highlight_logs(["EXCEPTION: something went very wrong\n"])
+
+    call_args = mock_st.markdown.call_args[0][0]
+    assert "#ff4b4b" in call_args
+
+
+#highlight_logs - <script> is escaped
+def test_html_special_chars_are_escaped():
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+    
+    highlight_logs(["<script>alert(1)</script>\n"])
+    
+    call_args = mock_st.markdown.call_args[0][0]
+    assert "<script>" not in call_args
+    assert "&lt;script&gt;" in call_args
+
+
