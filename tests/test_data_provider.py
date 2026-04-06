@@ -36,7 +36,88 @@ def test_api_returns_empty_when_folder_missing():
         df = get_all_test_data("API")
         assert df.empty
 
+#get_all_test_data - API - file is not json
+def test_api_skips_non_json_files(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+    
+    (json_dir / "readme.txt").write_text("hello")
+    
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+    
+    df = get_all_test_data("API")
+    assert df.empty
 
+
+#get_all_test_data - API - JSON status is "pass"
+def test_api_passed_status_mapped_correctly(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+
+    (json_dir / "20260217_0828.json").write_text('[{"results": [{"name": "CartTest", "status": "pass", "runDuration": 0.5, "testResults": [], "response": {"status": 200}}]}]')
+
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+
+    df = get_all_test_data("API")
+    assert df.iloc[0]["status"] == "Passed"
+
+
+#get_all_test_data - API - JSON status is "fail"
+def test_api_failed_status_mapped_correctly(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+
+    (json_dir / "20260217_0828.json").write_text('[{"results": [{"name": "CartTest", "status": "fail", "runDuration": 0.5, "testResults": [], "response": {"status": 200}}]}]')
+
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+
+    df = get_all_test_data("API")
+    assert df.iloc[0]["status"] == "Failed"
+
+
+#get_all_test_data - API -run_id is taken from first 13 characters of filename
+def test_api_run_id_extracted_correctly(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+
+    (json_dir / "20260217_0828.json").write_text('[{"results": [{"name": "CartTest", "status": "pass", "runDuration": 0.5, "testResults": [], "response": {"status": 200}}]}]')
+
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+
+    df = get_all_test_data("API")
+    assert df.iloc[0]["run_id"] == "20260217_0828"
+
+
+#get_all_test_data - API - error_msg is extracted from testResults
+def test_api_error_msg_extracted_correctly(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+
+    (json_dir / "20260217_0828.json").write_text('[{"results": [{"name": "CartTest", "status": "fail", "runDuration": 0.5, "testResults": [{"status": "fail", "description": "Assertion error"}], "response": {"status": 200}}]}]')
+
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+
+    df = get_all_test_data("API")
+    assert df.iloc[0]["error_msg"] == "Assertion error"
+
+
+#get_all_test_data - API - invalid JSON
+def test_api_invalid_json(tmp_path, monkeypatch):
+    json_dir = tmp_path / "logs" / "json"
+    json_dir.mkdir(parents=True)
+
+    (json_dir / "20260217_0828.json").write_text('invalid json')
+
+    monkeypatch.chdir(tmp_path)
+    get_all_test_data.clear()
+
+    df = get_all_test_data("API")
+    assert df.empty
 
 
 #get_all_test_data - Android - folder missing
@@ -89,7 +170,6 @@ def test_android_xml_returns_correct_status_passed(tmp_path, monkeypatch):
     get_all_test_data.clear()
     
     df = get_all_test_data("Android")
-    
     assert df.iloc[0]["status"] == "Passed"
 
 

@@ -8,7 +8,7 @@ sys.modules["streamlit_plotly_events"] = MagicMock()
 import pandas as pd
 from src.components import render_metrics, render_charts, highlight_logs
 
-#render_metrics - success rate je 75%
+#render_metrics - success rate is 75%
 def test_success_rate_is_75_percent():
     df = pd.DataFrame([
         {"status": "Passed", "duration": 1.0},
@@ -16,21 +16,30 @@ def test_success_rate_is_75_percent():
         {"status": "Passed", "duration": 1.5},
         {"status": "Failed", "duration": 3.0},
     ])
-
-    total = len(df)
-    passed = len(df[df["status"] == "Passed"])
-    rate = (passed / total * 100)
-    assert rate == 75.0
+    
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+    c1, c2, c3 = MagicMock(), MagicMock(), MagicMock()
+    mock_st.columns.return_value = [c1, c2, c3]
+    
+    render_metrics(df)
+    
+    print(f"\nc2 calls: {c2.metric.call_args_list}")
+    c2.metric.assert_called_once_with("Success Rate", "75.0%")
 
 
 #render_metrics - success rate is 0 when DataFrame is empty
 def test_success_rate_empty_dataframe():
     df = pd.DataFrame(columns=["status", "duration"])
-
-    total = len(df)
-    passed = len(df[df["status"] == "Passed"])
-    rate = (passed / total * 100) if total > 0 else 0
-    assert rate == 0
+    
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+    c1, c2, c3 = MagicMock(), MagicMock(), MagicMock()
+    mock_st.columns.return_value = [c1, c2, c3]
+    
+    render_metrics(df)
+    
+    c2.metric.assert_called_once_with("Success Rate", "0.0%")
 
 
 #render_metrics - average duration is correct
@@ -39,9 +48,15 @@ def test_average_duration():
         {"status": "Passed", "duration": 2.0},
         {"status": "Failed", "duration": 4.0},
     ])
-
-    avg_duration = df["duration"].mean()
-    assert avg_duration == 3.0
+    
+    mock_st = sys.modules["streamlit"]
+    mock_st.reset_mock()
+    c1, c2, c3 = MagicMock(), MagicMock(), MagicMock()
+    mock_st.columns.return_value = [c1, c2, c3]
+    
+    render_metrics(df)
+    
+    c3.metric.assert_called_once_with("Average duration", "3.00s")
 
 
 #render_charts - returns None when nothing is selected
