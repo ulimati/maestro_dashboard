@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import json
 import streamlit as st
 
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=300)
 def get_all_test_data(platform_selection):
     data = []
     

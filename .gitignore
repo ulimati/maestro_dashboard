@@ -3,3 +3,4 @@ logs/
 *.jpg
 *.jpeg
 .DS_Store
+.streamlit/secrets.toml

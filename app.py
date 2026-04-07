@@ -43,7 +43,13 @@ if not st.session_state.logged_in:
 # --- SIDEBAR (jen po přihlášení) ---
 st.sidebar.write(f"👤 {st.session_state.name}")
 st.sidebar.write(f"Role: {st.session_state.role}")
-if st.sidebar.button("Log out"):
+if st.sidebar.button("Refresh Data", use_container_width=True):
+    st.cache_data.clear()
+    st.rerun()
+
+st.sidebar.divider()
+
+if st.sidebar.button("Log out", use_container_width=True):
     st.session_state.logged_in = False
     st.rerun()
 
@@ -134,7 +140,6 @@ if "API" in platform:
 
     render_metrics(df_api)
 
-    # Viewer vidí jen metriky, ne detaily
     if st.session_state.role != "viewer":
         tab_summary, tab_all = st.tabs([
             "📊 Summary charts",
@@ -265,22 +270,17 @@ def display_test_folders(data_to_display):
         
         with cols[i % 2]:
             with st.expander(f"{icon} {name} ({total_in_test} {label})"):
-                for _, row in test_data.iterrows():
+                
+                for _, row in test_data.head(20).iterrows():
                     status_icon = "✅" if row['status'] == "Passed" else "❌"
                     st.write(f"**{status_icon} {row.get('run_id', 'N/A')}** | {row.get('duration', 0)}s")
                     
                     if row['status'] == "Failed":
                         if st.session_state.role == "admin":
                             st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
-                            
-                            img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_name', '')}.png")
-                            if os.path.exists(img_path):
-                                st.image(img_path, caption=f"Failure screenshot - {row['test_name']}")
 
-                            log_content = get_log_content(row.get('folder_path', ''), "console_output.log")
-                            if log_content:
-                                with st.expander("Show log"):
-                                    st.code("".join(log_content), language="log")
+                if len(test_data) > 20:
+                    st.caption(f"⚠️ Zobrazeno pouze 20 nejnovějších záznamů z {len(test_data)} pro udržení rychlosti.")
 
 # --- GLOBAL STATISTICS ---
 with st.expander("📊 GLOBAL HISTORY (ENTIRE PLATFORM)", expanded=True):
@@ -304,7 +304,7 @@ with st.expander("📊 GLOBAL HISTORY (ENTIRE PLATFORM)", expanded=True):
             st.markdown(f"### Results for status: {clicked_status_global}")
             df_filtered_global = df[df['status'] == clicked_status_global]
             display_test_folders(df_filtered_global)
-            
+
 # --- RUN DETAIL ---
 if st.session_state.role != "viewer":
     if selected_run and selected_run != "No runs available":

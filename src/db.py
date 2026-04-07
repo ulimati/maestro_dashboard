@@ -26,6 +26,21 @@ def get_role(email):
 
 def verify_user(email, password):
     user = users.find_one({"email": email})
-    if user and bcrypt.checkpw(password.encode(), user["password"].encode()):
-        return user
+    
+    if not user:
+        return None
+
+    db_password = user.get("password", "")
+
+    if db_password.startswith("$2b$"):
+        try:
+            if bcrypt.checkpw(password.encode('utf-8'), db_password.encode('utf-8')):
+                return user
+        except ValueError:
+            return None
+            
+    else:
+        if password == db_password:
+            return user
+
     return None

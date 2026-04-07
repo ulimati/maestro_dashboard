@@ -20,7 +20,6 @@ def render_charts(df, key_suffix="", show_selector=True):
 
     col1, col2 = st.columns(2)
     
-    # Nastavíme výchozí hodnotu, kdyby se selectbox vůbec nevykreslil
     selection = "— Select status —"
 
     with col1:
@@ -36,7 +35,6 @@ def render_charts(df, key_suffix="", show_selector=True):
         )
         st.plotly_chart(fig_pie, use_container_width=True, key=f"pie_{key_suffix}")
 
-        # Vykreslíme menu POUZE pokud je show_selector True
         if show_selector:
             options = ["— Select status —"] + list(status_counts['status'].values)
             selection = st.selectbox("Show folders for:", options, key=f"select_{key_suffix}")
