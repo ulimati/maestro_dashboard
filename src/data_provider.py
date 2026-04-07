@@ -23,7 +23,7 @@ def get_all_test_data(platform_selection):
                 with open(json_path, "r", encoding="utf-8") as f:
                     json_data = json.load(f)
                 
-                # JSON is a list, take the first element
+                # JSON is a list take the first element
                 if isinstance(json_data, list) and len(json_data) > 0:
                     item = json_data[0]
                 else:
