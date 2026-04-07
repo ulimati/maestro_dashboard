@@ -14,11 +14,14 @@ def render_metrics(df):
     c2.metric("Success Rate", f"{success_rate:.1f}%")
     c3.metric("Average duration", f"{avg_time:.2f}s")
 
-def render_charts(df, key_suffix=""):
+def render_charts(df, key_suffix="", show_selector=True):
     if df.empty:
         return None
 
     col1, col2 = st.columns(2)
+    
+    # Nastavíme výchozí hodnotu, kdyby se selectbox vůbec nevykreslil
+    selection = "— Select status —"
 
     with col1:
         status_counts = df['status'].value_counts().reset_index()
@@ -33,8 +36,10 @@ def render_charts(df, key_suffix=""):
         )
         st.plotly_chart(fig_pie, use_container_width=True, key=f"pie_{key_suffix}")
 
-        options = ["— Select status —"] + list(status_counts['status'].values)
-        selection = st.selectbox("Show folders for:", options, key=f"select_{key_suffix}")
+        # Vykreslíme menu POUZE pokud je show_selector True
+        if show_selector:
+            options = ["— Select status —"] + list(status_counts['status'].values)
+            selection = st.selectbox("Show folders for:", options, key=f"select_{key_suffix}")
 
     with col2:
         avg_times = df.groupby('test_name')['duration'].mean().reset_index()

@@ -160,9 +160,9 @@ if "API" in platform:
                                 with st.container(border=True):
                                     st.write(f"**{icon} Run ID:** `{row.get('run_id', 'N/A')}`")
                                     st.caption(f"Duration: {row.get('duration', 0)}s")
-                                if row['status'] == 'Failed':
-                                    st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
                                 if st.session_state.role == "admin":
+                                    if row['status'] == 'Failed':
+                                        st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
                                     with st.expander("Show JSON detail"):
                                         st.json(row.to_dict())
 
@@ -181,9 +181,9 @@ if "API" in platform:
                             with st.container(border=True):
                                 st.write(f"**{icon} Run ID:** `{row.get('run_id', 'N/A')}`")
                                 st.caption(f"Duration: {row.get('duration', 0)}s")
-                            if row['status'] == 'Failed':
-                                st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
                             if st.session_state.role == "admin":
+                                if row['status'] == 'Failed':
+                                    st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
                                 with st.expander("Show JSON detail"):
                                     st.json(row.to_dict())
 
@@ -270,9 +270,9 @@ def display_test_folders(data_to_display):
                     st.write(f"**{status_icon} {row.get('run_id', 'N/A')}** | {row.get('duration', 0)}s")
                     
                     if row['status'] == "Failed":
-                        st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
-                        
-                        if st.session_state.role in ["admin", "user"]:
+                        if st.session_state.role == "admin":
+                            st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
+                            
                             img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_name', '')}.png")
                             if os.path.exists(img_path):
                                 st.image(img_path, caption=f"Failure screenshot - {row['test_name']}")
@@ -295,14 +295,16 @@ with st.expander("📊 GLOBAL HISTORY (ENTIRE PLATFORM)", expanded=True):
     m3.metric("Failed", failed_all)
     m4.metric("Success Rate", f"{rate_all:.1f}%")
 
-    if st.session_state.role != "viewer":
-        clicked_status_global = render_charts(df, key_suffix="global")
+    can_interact = st.session_state.role != "viewer"
+    clicked_status_global = render_charts(df, key_suffix="global", show_selector=can_interact)
+
+    if can_interact:
         if clicked_status_global:
             st.divider()
             st.markdown(f"### Results for status: {clicked_status_global}")
             df_filtered_global = df[df['status'] == clicked_status_global]
             display_test_folders(df_filtered_global)
-
+            
 # --- RUN DETAIL ---
 if st.session_state.role != "viewer":
     if selected_run and selected_run != "No runs available":
@@ -337,9 +339,9 @@ if st.session_state.role != "viewer":
                             st.write(f"**Status:** {row['status']}")
                             
                             if row['status'] == "Failed":
-                                st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
-                                
                                 if st.session_state.role == "admin":
+                                    st.error(f"Error: {row.get('error_msg', 'Unknown error')}")
+                                    
                                     img_path = os.path.join(row.get('folder_path', ''), f"fail_{row.get('test_name', '')}.png")
                                     if os.path.exists(img_path):
                                         st.image(img_path, caption=f"Failure screenshot - {row['test_name']}")
