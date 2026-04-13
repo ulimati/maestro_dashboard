@@ -4,3 +4,7 @@ plotly
 bcrypt
 pymongo
 certifi
+uvicorn
+fastapi
+python-dotenv
+PyJWT
