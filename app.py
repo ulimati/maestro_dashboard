@@ -5,7 +5,7 @@ import datetime
 from streamlit_calendar import calendar
 from src.data_provider import get_all_test_data, get_log_content
 from src.components import render_metrics, render_charts
-from src.db import get_user_by_email, get_role, verify_user
+from src.auth import verify_user
 
 st.set_page_config(page_title="Maestro Fix", layout="wide")
 
