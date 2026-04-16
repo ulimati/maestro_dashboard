@@ -12,3 +12,5 @@ db = client["maestro_db"]
 
 users = db["users"]
 sessions = db["sessions"]
+# Kolekce pro ukládání výsledků z Android a iOS testů
+test_results = db["test_results"]

@@ -2,14 +2,15 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials
 from src.auth import verify_user
-from src.models import LoginRequest, TokenResponse, UserOut
+from src.models import LoginRequest, TokenResponse, UserOut, TestResultCreate
 from src.dependencies import (
     create_access_token,
     get_current_user,
     require_role,
     security
 )
-from src.db import sessions, users
+from src.db import sessions, users, test_results
+import src.data_provider as data_provider
 
 app = FastAPI(title="Maestro API", version="2.0")
 
@@ -102,3 +103,20 @@ def delete_user(email: str, user: dict = Depends(require_role("admin"))):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": f"User {email} deleted"}
+
+# -------------------------
+# TEST RESULTS (Pro Lovable a Test Runner)
+# -------------------------
+
+@app.post("/api/test-results")
+def save_test_result(result: TestResultCreate):
+    """Endpoint pro test runner na uložení výsledku do MongoDB."""
+    # model_dump() je moderní způsob v Pydantic v2 (nahrazuje dict())
+    new_result = result.model_dump() 
+    test_results.insert_one(new_result)
+    return {"status": "success", "message": "Test result saved."}
+
+@app.get("/api/metrics")
+def get_metrics(platform: str = "android"):
+    """Endpoint pro Lovable na získání dat pro grafy a karty."""
+    return data_provider.get_metrics_for_platform(platform)
