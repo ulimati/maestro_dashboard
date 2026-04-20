@@ -13,6 +13,9 @@ from src.db import sessions, users, test_results
 import src.data_provider as data_provider
 
 app = FastAPI(title="Maestro API", version="2.0")
+@app.get("/")
+def home():
+    return {"status": "API is running", "message": "Go to /api/metrics for data"}
 
 # CORS pro Lovable
 app.add_middleware(
@@ -58,12 +61,12 @@ def login(data: LoginRequest):
 # -------------------------
 
 @app.get("/me", response_model=UserOut)
-def me(user: dict = Depends(get_current_user)):
+def me(): # Odstranili jsme Depends
     return UserOut(
-        email=user["email"],
-        role=user["role"],
-        name=user.get("name"),
-        permissions=user.get("permissions", {})
+        email="admin@maestro.local",
+        role="admin",
+        name="Admin Uživatel",
+        permissions={"all": True}
     )
 
 @app.post("/logout")
@@ -79,11 +82,11 @@ def logout(
     return {"message": "Logged out successfully"}
 
 @app.get("/dashboard/summary")
-def dashboard_summary(user: dict = Depends(get_current_user)):
+def dashboard_summary(): # Odstranili jsme Depends
     return {
-        "email": user.get("email"),
-        "role": user["role"],
-        "permissions": user.get("permissions", {})
+        "email": "admin@maestro.local",
+        "role": "admin",
+        "permissions": {"all": True}
     }
 
 # -------------------------
@@ -120,3 +123,50 @@ def save_test_result(result: TestResultCreate):
 def get_metrics(platform: str = "android"):
     """Endpoint pro Lovable na získání dat pro grafy a karty."""
     return data_provider.get_metrics_for_platform(platform)
+
+@app.post("/api/login")
+async def api_login(request: LoginRequest):
+    user = verify_user(request.email, request.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    token = create_access_token({
+        "sub": user["email"],
+        "email": user["email"],
+        "role": user.get("role"),
+        "name": user.get("name"),
+    })
+    
+    return {
+        "access_token": token,
+        "email": user["email"],
+        "name": user.get("name", ""),
+        "role": user.get("role", "viewer"),
+        "permissions": user.get("permissions", {
+            "view_details": True,
+            "expand_graphs": True,
+            "view_summary": True,
+        }),
+    }
+
+@app.get("/api/test-results")
+def get_test_results(platform: str = "android"):
+    """Vrátí seznam výsledků testů pro danou platformu."""
+    results = list(test_results.find({"platform": platform}, {"_id": 0}))
+    return {"results": results}
+
+@app.get("/api/test-dates")
+def get_test_dates(platform: str = "android"):
+    """Vrátí seznam datumů kdy běžely testy."""
+    results = list(test_results.find({"platform": platform}, {"run_id": 1, "_id": 0}))
+    dates = set()
+    for r in results:
+        run_id = r.get("run_id", "")
+        if run_id and len(run_id) >= 8:
+            date_str = run_id[:8]
+            try:
+                formatted = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}"
+                dates.add(formatted)
+            except:
+                pass
+    return {"dates": list(dates)}
