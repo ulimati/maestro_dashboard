@@ -150,23 +150,25 @@ async def api_login(request: LoginRequest):
     }
 
 @app.get("/api/test-results")
-def get_test_results(platform: str = "android"):
+def get_test_results(platform: str = "android", date: str = None):
     """Vrátí seznam výsledků testů pro danou platformu."""
-    results = list(test_results.find({"platform": platform}, {"_id": 0}))
+    from datetime import datetime, timedelta
+    query = {"platform": platform}
+    if date:
+        start = datetime.strptime(date, "%Y-%m-%d")
+        end = start + timedelta(days=1)
+        query["timestamp"] = {"$gte": start, "$lt": end}
+    results = list(test_results.find(query, {"_id": 0}))
     return {"results": results}
 
 @app.get("/api/test-dates")
 def get_test_dates(platform: str = "android"):
     """Vrátí seznam datumů kdy běžely testy."""
-    results = list(test_results.find({"platform": platform}, {"run_id": 1, "_id": 0}))
+    results = list(test_results.find({"platform": platform}, {"timestamp": 1, "_id": 0}))
     dates = set()
     for r in results:
-        run_id = r.get("run_id", "")
-        if run_id and len(run_id) >= 8:
-            date_str = run_id[:8]
-            try:
-                formatted = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}"
-                dates.add(formatted)
-            except:
-                pass
+        ts = r.get("timestamp")
+        if ts:
+            formatted = ts.strftime("%Y-%m-%d")
+            dates.add(formatted)
     return {"dates": list(dates)}
