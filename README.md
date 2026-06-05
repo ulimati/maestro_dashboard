@@ -2,7 +2,7 @@
 
 A test results dashboard for mobile (Android / iOS) and API automated tests built with [Streamlit](https://streamlit.io).
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ulimati-maestro-dashboard-app-sjpnsv.streamlit.app)
+**[Live demo →](https://ulimati-maestro-dashboard-app-sjpnsv.streamlit.app)**
 
 ## Features
 
