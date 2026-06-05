@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Samsung_Galaxy_S24" tests="4" failures="1" time="238.5">
+    <testcase id="SET_cs0" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="41.0" status="SUCCESS"/>
+    <testcase id="SET_laa" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="62.4" status="SUCCESS"/>
+    <testcase id="SET_b7c" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="57.1" status="SUCCESS"/>
+    <testcase id="SET_29y" name="SET_04_Settings_test" classname="SET_04_Settings_test" time="78.0" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

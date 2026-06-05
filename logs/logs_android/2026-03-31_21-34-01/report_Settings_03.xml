@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="2" failures="0" time="69.1">
+    <testcase id="SET_yz4" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="52.1" status="SUCCESS"/>
+    <testcase id="SET_8c5" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="17.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

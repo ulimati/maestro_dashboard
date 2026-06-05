@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="3" failures="0" time="55.8">
+    <testcase id="SEA_ihu" name="SEA_01_Search_test" classname="SEA_01_Search_test" time="28.8" status="SUCCESS"/>
+    <testcase id="SEA_2cd" name="SEA_02_Search_test" classname="SEA_02_Search_test" time="17.2" status="SUCCESS"/>
+    <testcase id="SEA_3nv" name="SEA_03_Search_test" classname="SEA_03_Search_test" time="9.8" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

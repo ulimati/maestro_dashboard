@@ -1,0 +1,11 @@
+03-23 11:29:13.000  2757  2757 W InputMethodManager: Sample log entry 0
+03-23 11:29:13.200  8491  8491 V OpenGLRenderer: Sample log entry 1
+03-23 11:29:13.400  2345  2345 V ActivityManager: Sample log entry 2
+03-23 11:29:13.600  9324  9324 I InputMethodManager: Sample log entry 3
+03-23 11:29:13.800  4383  4383 W ActivityManager: Sample log entry 4
+03-23 11:29:14.000  7076  7076 V OpenGLRenderer: Sample log entry 5
+03-23 11:29:14.200  4805  4805 I InputMethodManager: Sample log entry 6
+03-23 11:29:14.400  6309  6309 W ViewRootImpl: Sample log entry 7
+03-23 11:29:14.600  8738  8738 I Choreographer: Sample log entry 8
+03-23 11:29:14.800  2807  2807 V Choreographer: Sample log entry 9
+03-23 11:29:15.000  6996  6996 V OpenGLRenderer: Sample log entry 10

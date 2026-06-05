@@ -1,0 +1,14 @@
+[2026-04-09 19:49:12] INFO  Starting test session on ios
+[2026-04-09 19:49:12] INFO  Device connected
+[2026-04-09 19:49:12] INFO  Installing test build
+[2026-04-09 19:49:12] INFO  Launching application
+[2026-04-09 19:49:12] DEBUG Asserting text content
+[2026-04-09 19:49:27] INFO  Clearing input field
+[2026-04-09 19:49:42] INFO  Tapping on button
+[2026-04-09 19:49:57] WARN  Scrolling to element
+[2026-04-09 19:50:12] WARN  Taking screenshot
+[2026-04-09 19:50:27] WARN  Tapping on button
+[2026-04-09 19:50:42] DEBUG Navigating back
+[2026-04-09 19:50:57] WARN  Tapping on button
+[2026-04-09 19:51:12] INFO  Clearing input field
+[2026-04-09 20:02:12] INFO  Test session completed

@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_15" tests="4" failures="0" time="318.7">
+    <testcase id="NOT_eym" name="NOT_01_Notifications_test" classname="NOT_01_Notifications_test" time="80.7" status="SUCCESS"/>
+    <testcase id="NOT_qli" name="NOT_02_Notifications_test" classname="NOT_02_Notifications_test" time="83.1" status="SUCCESS"/>
+    <testcase id="NOT_gdd" name="NOT_03_Notifications_test" classname="NOT_03_Notifications_test" time="86.1" status="SUCCESS"/>
+    <testcase id="NOT_l84" name="NOT_04_Notifications_test" classname="NOT_04_Notifications_test" time="68.8" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

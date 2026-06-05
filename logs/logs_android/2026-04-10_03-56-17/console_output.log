@@ -1,0 +1,9 @@
+[2026-04-10 03:56:17] INFO  Starting test session on android
+[2026-04-10 03:56:17] INFO  Device connected
+[2026-04-10 03:56:17] INFO  Installing test build
+[2026-04-10 03:56:17] INFO  Launching application
+[2026-04-10 03:56:17] DEBUG Scrolling to element
+[2026-04-10 03:56:32] INFO  Asserting text content
+[2026-04-10 03:56:47] WARN  Navigating back
+[2026-04-10 03:57:02] INFO  Scrolling to element
+[2026-04-10 04:08:17] INFO  Test session completed

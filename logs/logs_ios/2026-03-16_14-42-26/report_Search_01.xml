@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="3" failures="0" time="118.1">
+    <testcase id="SEA_rdw" name="SEA_01_Search_test" classname="SEA_01_Search_test" time="45.1" status="SUCCESS"/>
+    <testcase id="SEA_z1j" name="SEA_02_Search_test" classname="SEA_02_Search_test" time="10.3" status="SUCCESS"/>
+    <testcase id="SEA_owv" name="SEA_03_Search_test" classname="SEA_03_Search_test" time="62.7" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="3" failures="0" time="171.7">
+    <testcase id="PRO_pmt" name="PRO_01_ProductList_test" classname="PRO_01_ProductList_test" time="65.0" status="SUCCESS"/>
+    <testcase id="PRO_04z" name="PRO_02_ProductList_test" classname="PRO_02_ProductList_test" time="68.0" status="SUCCESS"/>
+    <testcase id="PRO_7ak" name="PRO_03_ProductList_test" classname="PRO_03_ProductList_test" time="38.7" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="5" failures="1" time="356.1">
+    <testcase id="DAS_q77" name="DAS_01_Dashboard_test" classname="DAS_01_Dashboard_test" time="80.6" status="SUCCESS"/>
+    <testcase id="DAS_a41" name="DAS_02_Dashboard_test" classname="DAS_02_Dashboard_test" time="89.0" status="SUCCESS"/>
+    <testcase id="DAS_f1f" name="DAS_03_Dashboard_test" classname="DAS_03_Dashboard_test" time="37.2" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Dashboard" type="AssertionError">Expected screen state was not reached during Dashboard flow.</failure>
+    </testcase>
+    <testcase id="DAS_oau" name="DAS_04_Dashboard_test" classname="DAS_04_Dashboard_test" time="64.2" status="SUCCESS"/>
+    <testcase id="DAS_dwt" name="DAS_05_Dashboard_test" classname="DAS_05_Dashboard_test" time="85.1" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

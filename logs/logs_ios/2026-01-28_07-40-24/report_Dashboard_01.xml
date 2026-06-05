@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="5" failures="0" time="98.3">
+    <testcase id="DAS_l0h" name="DAS_01_Dashboard_test" classname="DAS_01_Dashboard_test" time="10.7" status="SUCCESS"/>
+    <testcase id="DAS_kv5" name="DAS_02_Dashboard_test" classname="DAS_02_Dashboard_test" time="29.2" status="SUCCESS"/>
+    <testcase id="DAS_ea6" name="DAS_03_Dashboard_test" classname="DAS_03_Dashboard_test" time="35.7" status="SUCCESS"/>
+    <testcase id="DAS_0hc" name="DAS_04_Dashboard_test" classname="DAS_04_Dashboard_test" time="8.4" status="SUCCESS"/>
+    <testcase id="DAS_sa5" name="DAS_05_Dashboard_test" classname="DAS_05_Dashboard_test" time="14.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

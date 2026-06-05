@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="5" failures="1" time="208.4">
+    <testcase id="SEA_akw" name="SEA_01_Search_test" classname="SEA_01_Search_test" time="29.4" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Search" type="AssertionError">Expected screen state was not reached during Search flow.</failure>
+    </testcase>
+    <testcase id="SEA_zz7" name="SEA_02_Search_test" classname="SEA_02_Search_test" time="12.0" status="SUCCESS"/>
+    <testcase id="SEA_nqz" name="SEA_03_Search_test" classname="SEA_03_Search_test" time="68.8" status="SUCCESS"/>
+    <testcase id="SEA_6dr" name="SEA_04_Search_test" classname="SEA_04_Search_test" time="52.6" status="SUCCESS"/>
+    <testcase id="SEA_i6p" name="SEA_05_Search_test" classname="SEA_05_Search_test" time="45.6" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

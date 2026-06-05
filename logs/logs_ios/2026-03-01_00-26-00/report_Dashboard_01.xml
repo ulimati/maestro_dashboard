@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="5" failures="2" time="210.6">
+    <testcase id="DAS_yfs" name="DAS_01_Dashboard_test" classname="DAS_01_Dashboard_test" time="67.4" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Dashboard" type="AssertionError">Expected screen state was not reached during Dashboard flow.</failure>
+    </testcase>
+    <testcase id="DAS_o9g" name="DAS_02_Dashboard_test" classname="DAS_02_Dashboard_test" time="71.8" status="SUCCESS"/>
+    <testcase id="DAS_joj" name="DAS_03_Dashboard_test" classname="DAS_03_Dashboard_test" time="10.3" status="SUCCESS"/>
+    <testcase id="DAS_tew" name="DAS_04_Dashboard_test" classname="DAS_04_Dashboard_test" time="25.0" status="SUCCESS"/>
+    <testcase id="DAS_9yi" name="DAS_05_Dashboard_test" classname="DAS_05_Dashboard_test" time="36.1" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Dashboard" type="AssertionError">Expected screen state was not reached during Dashboard flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

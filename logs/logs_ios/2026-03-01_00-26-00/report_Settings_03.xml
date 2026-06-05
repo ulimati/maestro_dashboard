@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="3" failures="3" time="180.3">
+    <testcase id="SET_4fv" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="75.8" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+    <testcase id="SET_2kv" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="71.9" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+    <testcase id="SET_sjh" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="32.6" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

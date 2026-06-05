@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_15" tests="3" failures="0" time="149.9">
+    <testcase id="PRO_5b5" name="PRO_01_ProductDetail_test" classname="PRO_01_ProductDetail_test" time="78.1" status="SUCCESS"/>
+    <testcase id="PRO_6dg" name="PRO_02_ProductDetail_test" classname="PRO_02_ProductDetail_test" time="10.5" status="SUCCESS"/>
+    <testcase id="PRO_3aw" name="PRO_03_ProductDetail_test" classname="PRO_03_ProductDetail_test" time="61.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

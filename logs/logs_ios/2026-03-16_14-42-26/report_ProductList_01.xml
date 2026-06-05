@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="5" failures="0" time="150.0">
+    <testcase id="PRO_dn9" name="PRO_01_ProductList_test" classname="PRO_01_ProductList_test" time="9.2" status="SUCCESS"/>
+    <testcase id="PRO_z2j" name="PRO_02_ProductList_test" classname="PRO_02_ProductList_test" time="24.6" status="SUCCESS"/>
+    <testcase id="PRO_giz" name="PRO_03_ProductList_test" classname="PRO_03_ProductList_test" time="71.4" status="SUCCESS"/>
+    <testcase id="PRO_jau" name="PRO_04_ProductList_test" classname="PRO_04_ProductList_test" time="20.5" status="SUCCESS"/>
+    <testcase id="PRO_4gq" name="PRO_05_ProductList_test" classname="PRO_05_ProductList_test" time="24.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

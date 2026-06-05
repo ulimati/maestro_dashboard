@@ -1,0 +1,84 @@
+[
+  {
+    "iterationIndex": 0,
+    "results": [
+      {
+        "test": {
+          "filename": "Cart/Test_Cart_API"
+        },
+        "request": {
+          "method": "PUT",
+          "url": "https://api.example-app.internal/api/notifications",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "Content-Type": "application/json"
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "date": "Mon, 13 Apr 2026 18:19:44 GMT",
+            "content-type": "application/json",
+            "content-length": "486",
+            "connection": "close",
+            "x-ratelimit-remaining": "8",
+            "x-ratelimit-burst-capacity": "20",
+            "cache-control": "no-cache, no-store, max-age=0, must-revalidate"
+          },
+          "data": {
+            "entries": []
+          },
+          "url": "https://api.example-app.internal/api/notifications",
+          "responseTime": 561
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "Status code should be 200 or 400",
+            "status": "pass",
+            "uid": "rba40zh8"
+          },
+          {
+            "description": "Response should have valid structure",
+            "status": "pass",
+            "uid": "thwfrqbt"
+          },
+          {
+            "description": "Content-Type should be application/json",
+            "status": "pass",
+            "uid": "axd84le2"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.561,
+        "name": "Test_Cart_API",
+        "path": "Cart/Test_Cart_API",
+        "iterationIndex": 0
+      }
+    ],
+    "summary": {
+      "totalRequests": 1,
+      "passedRequests": 1,
+      "failedRequests": 0,
+      "errorRequests": 0,
+      "skippedRequests": 0,
+      "totalAssertions": 0,
+      "passedAssertions": 0,
+      "failedAssertions": 0,
+      "totalTests": 3,
+      "passedTests": 3,
+      "failedTests": 0,
+      "totalPreRequestTests": 0,
+      "passedPreRequestTests": 0,
+      "failedPreRequestTests": 0,
+      "totalPostResponseTests": 0,
+      "passedPostResponseTests": 0,
+      "failedPostResponseTests": 0
+    }
+  }
+]

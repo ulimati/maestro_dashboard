@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="2" failures="0" time="67.0">
+    <testcase id="CHE_rlf" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="58.0" status="SUCCESS"/>
+    <testcase id="CHE_tr5" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="9.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

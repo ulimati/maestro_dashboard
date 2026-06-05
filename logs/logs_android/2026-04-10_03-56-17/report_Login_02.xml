@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="4" failures="1" time="204.8">
+    <testcase id="LOG_65w" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="34.1" status="SUCCESS"/>
+    <testcase id="LOG_6io" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="83.7" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Login" type="AssertionError">Expected screen state was not reached during Login flow.</failure>
+    </testcase>
+    <testcase id="LOG_xib" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="77.5" status="SUCCESS"/>
+    <testcase id="LOG_1c6" name="LOG_04_Login_test" classname="LOG_04_Login_test" time="9.5" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

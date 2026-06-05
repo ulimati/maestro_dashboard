@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="5" failures="0" time="266.6">
+    <testcase id="CHE_tdg" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="60.0" status="SUCCESS"/>
+    <testcase id="CHE_uua" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="77.3" status="SUCCESS"/>
+    <testcase id="CHE_ufx" name="CHE_03_Checkout_test" classname="CHE_03_Checkout_test" time="16.7" status="SUCCESS"/>
+    <testcase id="CHE_ysk" name="CHE_04_Checkout_test" classname="CHE_04_Checkout_test" time="73.1" status="SUCCESS"/>
+    <testcase id="CHE_sob" name="CHE_05_Checkout_test" classname="CHE_05_Checkout_test" time="39.5" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="5" failures="1" time="202.5">
+    <testcase id="USE_ror" name="USE_01_UserProfile_test" classname="USE_01_UserProfile_test" time="59.5" status="SUCCESS"/>
+    <testcase id="USE_sp1" name="USE_02_UserProfile_test" classname="USE_02_UserProfile_test" time="13.5" status="SUCCESS"/>
+    <testcase id="USE_hcj" name="USE_03_UserProfile_test" classname="USE_03_UserProfile_test" time="44.7" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in UserProfile" type="AssertionError">Expected screen state was not reached during UserProfile flow.</failure>
+    </testcase>
+    <testcase id="USE_wp5" name="USE_04_UserProfile_test" classname="USE_04_UserProfile_test" time="60.1" status="SUCCESS"/>
+    <testcase id="USE_jhc" name="USE_05_UserProfile_test" classname="USE_05_UserProfile_test" time="24.7" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

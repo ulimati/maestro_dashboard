@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="6" failures="1" time="240.1">
+    <testcase id="PRO_wff" name="PRO_01_ProductList_test" classname="PRO_01_ProductList_test" time="32.3" status="SUCCESS"/>
+    <testcase id="PRO_417" name="PRO_02_ProductList_test" classname="PRO_02_ProductList_test" time="38.7" status="SUCCESS"/>
+    <testcase id="PRO_m8j" name="PRO_03_ProductList_test" classname="PRO_03_ProductList_test" time="35.8" status="SUCCESS"/>
+    <testcase id="PRO_xql" name="PRO_04_ProductList_test" classname="PRO_04_ProductList_test" time="37.1" status="SUCCESS"/>
+    <testcase id="PRO_vlz" name="PRO_05_ProductList_test" classname="PRO_05_ProductList_test" time="55.8" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in ProductList" type="AssertionError">Expected screen state was not reached during ProductList flow.</failure>
+    </testcase>
+    <testcase id="PRO_4a2" name="PRO_06_ProductList_test" classname="PRO_06_ProductList_test" time="40.4" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

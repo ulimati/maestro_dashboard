@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="6" failures="0" time="254.0">
+    <testcase id="PRO_5xl" name="PRO_01_ProductDetail_test" classname="PRO_01_ProductDetail_test" time="64.3" status="SUCCESS"/>
+    <testcase id="PRO_bko" name="PRO_02_ProductDetail_test" classname="PRO_02_ProductDetail_test" time="61.9" status="SUCCESS"/>
+    <testcase id="PRO_v8j" name="PRO_03_ProductDetail_test" classname="PRO_03_ProductDetail_test" time="11.9" status="SUCCESS"/>
+    <testcase id="PRO_ufy" name="PRO_04_ProductDetail_test" classname="PRO_04_ProductDetail_test" time="66.2" status="SUCCESS"/>
+    <testcase id="PRO_928" name="PRO_05_ProductDetail_test" classname="PRO_05_ProductDetail_test" time="40.2" status="SUCCESS"/>
+    <testcase id="PRO_w1b" name="PRO_06_ProductDetail_test" classname="PRO_06_ProductDetail_test" time="9.5" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

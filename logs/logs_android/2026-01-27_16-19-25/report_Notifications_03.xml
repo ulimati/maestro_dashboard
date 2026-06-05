@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="4" failures="0" time="153.4">
+    <testcase id="NOT_3gk" name="NOT_01_Notifications_test" classname="NOT_01_Notifications_test" time="9.8" status="SUCCESS"/>
+    <testcase id="NOT_f7k" name="NOT_02_Notifications_test" classname="NOT_02_Notifications_test" time="61.2" status="SUCCESS"/>
+    <testcase id="NOT_ka4" name="NOT_03_Notifications_test" classname="NOT_03_Notifications_test" time="23.2" status="SUCCESS"/>
+    <testcase id="NOT_eo8" name="NOT_04_Notifications_test" classname="NOT_04_Notifications_test" time="59.2" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

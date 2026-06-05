@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="3" failures="1" time="164.1">
+    <testcase id="CAR_67c" name="CAR_01_Cart_test" classname="CAR_01_Cart_test" time="56.7" status="SUCCESS"/>
+    <testcase id="CAR_5g7" name="CAR_02_Cart_test" classname="CAR_02_Cart_test" time="49.3" status="SUCCESS"/>
+    <testcase id="CAR_11u" name="CAR_03_Cart_test" classname="CAR_03_Cart_test" time="58.1" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Cart" type="AssertionError">Expected screen state was not reached during Cart flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

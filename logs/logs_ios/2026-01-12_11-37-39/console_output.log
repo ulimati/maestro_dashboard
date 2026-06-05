@@ -1,0 +1,12 @@
+[2026-01-12 11:37:39] INFO  Starting test session on ios
+[2026-01-12 11:37:39] INFO  Device connected
+[2026-01-12 11:37:39] INFO  Installing test build
+[2026-01-12 11:37:39] INFO  Launching application
+[2026-01-12 11:37:39] INFO  Scrolling to element
+[2026-01-12 11:37:54] WARN  Asserting text content
+[2026-01-12 11:38:09] DEBUG Taking screenshot
+[2026-01-12 11:38:24] WARN  Clearing input field
+[2026-01-12 11:38:39] INFO  Waiting for element...
+[2026-01-12 11:38:54] WARN  Scrolling to element
+[2026-01-12 11:39:09] DEBUG Asserting text content
+[2026-01-12 12:06:39] INFO  Test session completed

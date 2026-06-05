@@ -1,0 +1,14 @@
+03-29 11:03:05.000  5872  5872 W Choreographer: Sample log entry 0
+03-29 11:03:05.200  9203  9203 I OpenGLRenderer: Sample log entry 1
+03-29 11:03:05.400  7754  7754 D ViewRootImpl: Sample log entry 2
+03-29 11:03:05.600  5230  5230 V ViewRootImpl: Sample log entry 3
+03-29 11:03:05.800  1440  1440 V ViewRootImpl: Sample log entry 4
+03-29 11:03:06.000  3114  3114 V Choreographer: Sample log entry 5
+03-29 11:03:06.200  9900  9900 I InputMethodManager: Sample log entry 6
+03-29 11:03:06.400  2202  2202 W Choreographer: Sample log entry 7
+03-29 11:03:06.600  3228  3228 I ViewRootImpl: Sample log entry 8
+03-29 11:03:06.800  1867  1867 W Choreographer: Sample log entry 9
+03-29 11:03:07.000  2232  2232 D ActivityManager: Sample log entry 10
+03-29 11:03:07.200  5782  5782 W Choreographer: Sample log entry 11
+03-29 11:03:07.400  7200  7200 I OpenGLRenderer: Sample log entry 12
+03-29 11:03:07.600  2065  2065 V Choreographer: Sample log entry 13

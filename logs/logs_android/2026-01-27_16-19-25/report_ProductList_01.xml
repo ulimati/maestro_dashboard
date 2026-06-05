@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="3" failures="2" time="131.1">
+    <testcase id="PRO_kbx" name="PRO_01_ProductList_test" classname="PRO_01_ProductList_test" time="50.4" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in ProductList" type="AssertionError">Expected screen state was not reached during ProductList flow.</failure>
+    </testcase>
+    <testcase id="PRO_ogd" name="PRO_02_ProductList_test" classname="PRO_02_ProductList_test" time="40.1" status="SUCCESS"/>
+    <testcase id="PRO_qoi" name="PRO_03_ProductList_test" classname="PRO_03_ProductList_test" time="40.6" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in ProductList" type="AssertionError">Expected screen state was not reached during ProductList flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

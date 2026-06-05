@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="3" failures="0" time="143.5">
+    <testcase id="LOG_oy5" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="37.1" status="SUCCESS"/>
+    <testcase id="LOG_txl" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="16.5" status="SUCCESS"/>
+    <testcase id="LOG_ir2" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="89.9" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

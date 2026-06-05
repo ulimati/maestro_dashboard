@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="5" failures="0" time="205.5">
+    <testcase id="SET_vao" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="42.2" status="SUCCESS"/>
+    <testcase id="SET_nfw" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="14.0" status="SUCCESS"/>
+    <testcase id="SET_o0z" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="30.0" status="SUCCESS"/>
+    <testcase id="SET_n39" name="SET_04_Settings_test" classname="SET_04_Settings_test" time="62.3" status="SUCCESS"/>
+    <testcase id="SET_de2" name="SET_05_Settings_test" classname="SET_05_Settings_test" time="57.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

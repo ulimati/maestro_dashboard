@@ -1,10 +1,5 @@
 streamlit
-pandas
+streamlit-calendar
+streamlit-plotly-events
 plotly
-bcrypt
-pymongo
-certifi
-uvicorn
-fastapi
-python-dotenv
-PyJWT
+pandas

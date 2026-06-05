@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="6" failures="0" time="217.1">
+    <testcase id="DAS_bod" name="DAS_01_Dashboard_test" classname="DAS_01_Dashboard_test" time="19.6" status="SUCCESS"/>
+    <testcase id="DAS_8zm" name="DAS_02_Dashboard_test" classname="DAS_02_Dashboard_test" time="33.4" status="SUCCESS"/>
+    <testcase id="DAS_bsl" name="DAS_03_Dashboard_test" classname="DAS_03_Dashboard_test" time="66.1" status="SUCCESS"/>
+    <testcase id="DAS_ws6" name="DAS_04_Dashboard_test" classname="DAS_04_Dashboard_test" time="45.9" status="SUCCESS"/>
+    <testcase id="DAS_u88" name="DAS_05_Dashboard_test" classname="DAS_05_Dashboard_test" time="30.6" status="SUCCESS"/>
+    <testcase id="DAS_413" name="DAS_06_Dashboard_test" classname="DAS_06_Dashboard_test" time="21.5" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

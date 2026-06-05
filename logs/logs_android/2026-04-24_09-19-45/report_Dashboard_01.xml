@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="5" failures="1" time="264.7">
+    <testcase id="DAS_3lr" name="DAS_01_Dashboard_test" classname="DAS_01_Dashboard_test" time="29.6" status="SUCCESS"/>
+    <testcase id="DAS_7wl" name="DAS_02_Dashboard_test" classname="DAS_02_Dashboard_test" time="62.6" status="SUCCESS"/>
+    <testcase id="DAS_xmu" name="DAS_03_Dashboard_test" classname="DAS_03_Dashboard_test" time="55.9" status="SUCCESS"/>
+    <testcase id="DAS_vj7" name="DAS_04_Dashboard_test" classname="DAS_04_Dashboard_test" time="55.5" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Dashboard" type="AssertionError">Expected screen state was not reached during Dashboard flow.</failure>
+    </testcase>
+    <testcase id="DAS_o2e" name="DAS_05_Dashboard_test" classname="DAS_05_Dashboard_test" time="61.1" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,10 @@
+[2026-03-16 14:42:26] INFO  Starting test session on ios
+[2026-03-16 14:42:26] INFO  Device connected
+[2026-03-16 14:42:26] INFO  Installing test build
+[2026-03-16 14:42:26] INFO  Launching application
+[2026-03-16 14:42:26] INFO  Scrolling to element
+[2026-03-16 14:42:41] DEBUG Taking screenshot
+[2026-03-16 14:42:56] INFO  Taking screenshot
+[2026-03-16 14:43:11] WARN  Navigating back
+[2026-03-16 14:43:26] WARN  Tapping on button
+[2026-03-16 14:55:26] INFO  Test session completed

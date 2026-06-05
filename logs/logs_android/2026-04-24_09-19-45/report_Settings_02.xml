@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="5" failures="1" time="214.6">
+    <testcase id="SET_ts8" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="62.4" status="SUCCESS"/>
+    <testcase id="SET_l48" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="32.6" status="SUCCESS"/>
+    <testcase id="SET_jxw" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="70.3" status="SUCCESS"/>
+    <testcase id="SET_4mz" name="SET_04_Settings_test" classname="SET_04_Settings_test" time="16.9" status="SUCCESS"/>
+    <testcase id="SET_aj3" name="SET_05_Settings_test" classname="SET_05_Settings_test" time="32.4" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="6" failures="2" time="333.0">
+    <testcase id="SEA_vt0" name="SEA_01_Search_test" classname="SEA_01_Search_test" time="49.6" status="SUCCESS"/>
+    <testcase id="SEA_5ft" name="SEA_02_Search_test" classname="SEA_02_Search_test" time="86.7" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Search" type="AssertionError">Expected screen state was not reached during Search flow.</failure>
+    </testcase>
+    <testcase id="SEA_hge" name="SEA_03_Search_test" classname="SEA_03_Search_test" time="83.9" status="SUCCESS"/>
+    <testcase id="SEA_z2a" name="SEA_04_Search_test" classname="SEA_04_Search_test" time="34.3" status="SUCCESS"/>
+    <testcase id="SEA_jn9" name="SEA_05_Search_test" classname="SEA_05_Search_test" time="37.2" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Search" type="AssertionError">Expected screen state was not reached during Search flow.</failure>
+    </testcase>
+    <testcase id="SEA_xo3" name="SEA_06_Search_test" classname="SEA_06_Search_test" time="41.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

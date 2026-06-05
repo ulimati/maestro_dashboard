@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="2" failures="1" time="58.0">
+    <testcase id="SET_4ua" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="47.7" status="SUCCESS"/>
+    <testcase id="SET_qg2" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="10.3" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Settings" type="AssertionError">Expected screen state was not reached during Settings flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

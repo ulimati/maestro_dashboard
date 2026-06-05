@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="2" failures="0" time="113.2">
+    <testcase id="LOG_cg8" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="64.8" status="SUCCESS"/>
+    <testcase id="LOG_y5g" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="48.4" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

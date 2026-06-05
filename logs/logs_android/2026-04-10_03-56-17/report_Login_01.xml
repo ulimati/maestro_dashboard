@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="4" failures="0" time="215.9">
+    <testcase id="LOG_h4q" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="87.6" status="SUCCESS"/>
+    <testcase id="LOG_vxc" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="11.7" status="SUCCESS"/>
+    <testcase id="LOG_sv3" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="60.2" status="SUCCESS"/>
+    <testcase id="LOG_yxl" name="LOG_04_Login_test" classname="LOG_04_Login_test" time="56.4" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="6" failures="1" time="381.6">
+    <testcase id="CHE_yhf" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="87.7" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Checkout" type="AssertionError">Expected screen state was not reached during Checkout flow.</failure>
+    </testcase>
+    <testcase id="CHE_a2v" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="57.0" status="SUCCESS"/>
+    <testcase id="CHE_k2c" name="CHE_03_Checkout_test" classname="CHE_03_Checkout_test" time="43.3" status="SUCCESS"/>
+    <testcase id="CHE_ayc" name="CHE_04_Checkout_test" classname="CHE_04_Checkout_test" time="75.5" status="SUCCESS"/>
+    <testcase id="CHE_79r" name="CHE_05_Checkout_test" classname="CHE_05_Checkout_test" time="81.1" status="SUCCESS"/>
+    <testcase id="CHE_vyv" name="CHE_06_Checkout_test" classname="CHE_06_Checkout_test" time="37.0" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

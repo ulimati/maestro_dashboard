@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="6" failures="0" time="296.0">
+    <testcase id="USE_1o4" name="USE_01_UserProfile_test" classname="USE_01_UserProfile_test" time="88.0" status="SUCCESS"/>
+    <testcase id="USE_8uf" name="USE_02_UserProfile_test" classname="USE_02_UserProfile_test" time="37.0" status="SUCCESS"/>
+    <testcase id="USE_51m" name="USE_03_UserProfile_test" classname="USE_03_UserProfile_test" time="38.0" status="SUCCESS"/>
+    <testcase id="USE_1xk" name="USE_04_UserProfile_test" classname="USE_04_UserProfile_test" time="50.9" status="SUCCESS"/>
+    <testcase id="USE_3fa" name="USE_05_UserProfile_test" classname="USE_05_UserProfile_test" time="33.4" status="SUCCESS"/>
+    <testcase id="USE_884" name="USE_06_UserProfile_test" classname="USE_06_UserProfile_test" time="48.7" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

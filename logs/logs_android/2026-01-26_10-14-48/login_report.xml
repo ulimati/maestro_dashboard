@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Samsung_Galaxy_S24" tests="1" failures="0" time="21.8">
+    <testcase id="LOG_4me" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="21.8" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

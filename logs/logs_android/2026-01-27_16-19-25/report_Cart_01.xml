@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="2" failures="0" time="81.2">
+    <testcase id="CAR_gue" name="CAR_01_Cart_test" classname="CAR_01_Cart_test" time="70.7" status="SUCCESS"/>
+    <testcase id="CAR_t7x" name="CAR_02_Cart_test" classname="CAR_02_Cart_test" time="10.5" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

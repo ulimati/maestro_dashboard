@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="6" failures="0" time="277.7">
+    <testcase id="USE_kqf" name="USE_01_UserProfile_test" classname="USE_01_UserProfile_test" time="82.9" status="SUCCESS"/>
+    <testcase id="USE_ao6" name="USE_02_UserProfile_test" classname="USE_02_UserProfile_test" time="31.0" status="SUCCESS"/>
+    <testcase id="USE_m5e" name="USE_03_UserProfile_test" classname="USE_03_UserProfile_test" time="36.5" status="SUCCESS"/>
+    <testcase id="USE_v97" name="USE_04_UserProfile_test" classname="USE_04_UserProfile_test" time="72.5" status="SUCCESS"/>
+    <testcase id="USE_8a7" name="USE_05_UserProfile_test" classname="USE_05_UserProfile_test" time="27.7" status="SUCCESS"/>
+    <testcase id="USE_gdv" name="USE_06_UserProfile_test" classname="USE_06_UserProfile_test" time="27.1" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

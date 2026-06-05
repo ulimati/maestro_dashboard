@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="3" failures="0" time="144.3">
+    <testcase id="CAR_lmm" name="CAR_01_Cart_test" classname="CAR_01_Cart_test" time="36.2" status="SUCCESS"/>
+    <testcase id="CAR_8mg" name="CAR_02_Cart_test" classname="CAR_02_Cart_test" time="61.3" status="SUCCESS"/>
+    <testcase id="CAR_z1z" name="CAR_03_Cart_test" classname="CAR_03_Cart_test" time="46.8" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

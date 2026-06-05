@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_15" tests="2" failures="1" time="96.4">
+    <testcase id="CHE_mp3" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="45.3" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Checkout" type="AssertionError">Expected screen state was not reached during Checkout flow.</failure>
+    </testcase>
+    <testcase id="CHE_xcx" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="51.1" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

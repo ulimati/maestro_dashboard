@@ -1,0 +1,12 @@
+01-26 10:14:48.000  8416  8416 V InputMethodManager: Sample log entry 0
+01-26 10:14:48.200  2199  2199 W ActivityManager: Sample log entry 1
+01-26 10:14:48.400  1976  1976 V InputMethodManager: Sample log entry 2
+01-26 10:14:48.600  1278  1278 V ActivityManager: Sample log entry 3
+01-26 10:14:48.800  9178  9178 W Choreographer: Sample log entry 4
+01-26 10:14:49.000  1867  1867 D ViewRootImpl: Sample log entry 5
+01-26 10:14:49.200  7546  7546 V Choreographer: Sample log entry 6
+01-26 10:14:49.400  9027  9027 W ViewRootImpl: Sample log entry 7
+01-26 10:14:49.600  8911  8911 V InputMethodManager: Sample log entry 8
+01-26 10:14:49.800  8857  8857 D InputMethodManager: Sample log entry 9
+01-26 10:14:50.000  2864  2864 D InputMethodManager: Sample log entry 10
+01-26 10:14:50.200  7993  7993 D ViewRootImpl: Sample log entry 11

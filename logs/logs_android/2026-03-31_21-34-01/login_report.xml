@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="2" failures="0" time="59.9">
+    <testcase id="LOG_6ol" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="45.8" status="SUCCESS"/>
+    <testcase id="LOG_wdi" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="14.1" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

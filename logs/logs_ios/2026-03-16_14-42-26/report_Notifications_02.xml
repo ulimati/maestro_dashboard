@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad_Air_5" tests="3" failures="1" time="57.9">
+    <testcase id="NOT_82h" name="NOT_01_Notifications_test" classname="NOT_01_Notifications_test" time="19.8" status="SUCCESS"/>
+    <testcase id="NOT_ki4" name="NOT_02_Notifications_test" classname="NOT_02_Notifications_test" time="15.5" status="SUCCESS"/>
+    <testcase id="NOT_nvf" name="NOT_03_Notifications_test" classname="NOT_03_Notifications_test" time="22.6" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Notifications" type="AssertionError">Expected screen state was not reached during Notifications flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

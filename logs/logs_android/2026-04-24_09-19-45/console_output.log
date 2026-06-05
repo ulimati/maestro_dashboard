@@ -1,0 +1,15 @@
+[2026-04-24 09:19:45] INFO  Starting test session on android
+[2026-04-24 09:19:45] INFO  Device connected
+[2026-04-24 09:19:45] INFO  Installing test build
+[2026-04-24 09:19:45] INFO  Launching application
+[2026-04-24 09:19:45] DEBUG Waiting for element...
+[2026-04-24 09:20:00] DEBUG Waiting for element...
+[2026-04-24 09:20:15] INFO  Scrolling to element
+[2026-04-24 09:20:30] DEBUG Waiting for element...
+[2026-04-24 09:20:45] DEBUG Navigating back
+[2026-04-24 09:21:00] WARN  Scrolling to element
+[2026-04-24 09:21:15] DEBUG Navigating back
+[2026-04-24 09:21:30] INFO  Clearing input field
+[2026-04-24 09:21:45] WARN  Tapping on button
+[2026-04-24 09:22:00] WARN  Tapping on button
+[2026-04-24 09:43:45] INFO  Test session completed

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Samsung_Galaxy_S24" tests="3" failures="0" time="113.4">
+    <testcase id="CHE_s78" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="72.5" status="SUCCESS"/>
+    <testcase id="CHE_u41" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="16.1" status="SUCCESS"/>
+    <testcase id="CHE_n8q" name="CHE_03_Checkout_test" classname="CHE_03_Checkout_test" time="24.8" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

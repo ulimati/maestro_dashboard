@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Samsung_Galaxy_S24" tests="4" failures="0" time="265.1">
+    <testcase id="SET_vgd" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="88.8" status="SUCCESS"/>
+    <testcase id="SET_g4p" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="49.2" status="SUCCESS"/>
+    <testcase id="SET_slk" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="69.4" status="SUCCESS"/>
+    <testcase id="SET_xel" name="SET_04_Settings_test" classname="SET_04_Settings_test" time="57.7" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

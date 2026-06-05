@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="5" failures="0" time="180.2">
+    <testcase id="LOG_3as" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="56.8" status="SUCCESS"/>
+    <testcase id="LOG_fne" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="39.7" status="SUCCESS"/>
+    <testcase id="LOG_lz0" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="17.7" status="SUCCESS"/>
+    <testcase id="LOG_io0" name="LOG_04_Login_test" classname="LOG_04_Login_test" time="51.1" status="SUCCESS"/>
+    <testcase id="LOG_0oi" name="LOG_05_Login_test" classname="LOG_05_Login_test" time="14.9" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

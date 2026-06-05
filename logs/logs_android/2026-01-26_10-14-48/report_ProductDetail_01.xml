@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Samsung_Galaxy_S24" tests="2" failures="0" time="132.7">
+    <testcase id="PRO_8ug" name="PRO_01_ProductDetail_test" classname="PRO_01_ProductDetail_test" time="62.3" status="SUCCESS"/>
+    <testcase id="PRO_q5h" name="PRO_02_ProductDetail_test" classname="PRO_02_ProductDetail_test" time="70.4" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

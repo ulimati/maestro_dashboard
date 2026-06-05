@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="6" failures="0" time="251.5">
+    <testcase id="CHE_ein" name="CHE_01_Checkout_test" classname="CHE_01_Checkout_test" time="28.3" status="SUCCESS"/>
+    <testcase id="CHE_4rz" name="CHE_02_Checkout_test" classname="CHE_02_Checkout_test" time="54.4" status="SUCCESS"/>
+    <testcase id="CHE_kj5" name="CHE_03_Checkout_test" classname="CHE_03_Checkout_test" time="39.7" status="SUCCESS"/>
+    <testcase id="CHE_ywh" name="CHE_04_Checkout_test" classname="CHE_04_Checkout_test" time="47.4" status="SUCCESS"/>
+    <testcase id="CHE_jth" name="CHE_05_Checkout_test" classname="CHE_05_Checkout_test" time="59.8" status="SUCCESS"/>
+    <testcase id="CHE_bhe" name="CHE_06_Checkout_test" classname="CHE_06_Checkout_test" time="21.9" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

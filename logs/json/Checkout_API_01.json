@@ -1,0 +1,84 @@
+[
+  {
+    "iterationIndex": 0,
+    "results": [
+      {
+        "test": {
+          "filename": "Checkout/Test_Checkout_API"
+        },
+        "request": {
+          "method": "GET",
+          "url": "https://api.example-app.internal/api/notifications",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "Content-Type": "application/json"
+          }
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "headers": {
+            "date": "Sat, 07 Mar 2026 20:00:42 GMT",
+            "content-type": "application/json",
+            "content-length": "473",
+            "connection": "close",
+            "x-ratelimit-remaining": "2",
+            "x-ratelimit-burst-capacity": "20",
+            "cache-control": "no-cache, no-store, max-age=0, must-revalidate"
+          },
+          "data": {
+            "entries": null
+          },
+          "url": "https://api.example-app.internal/api/notifications",
+          "responseTime": 1111
+        },
+        "error": "Request failed with status 500",
+        "status": "fail",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "Status code should be 200 or 400",
+            "status": "fail",
+            "uid": "2c4bp357"
+          },
+          {
+            "description": "Response should have valid structure",
+            "status": "fail",
+            "uid": "giv72btn"
+          },
+          {
+            "description": "Content-Type should be application/json",
+            "status": "pass",
+            "uid": "i07bbxpe"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 1.111,
+        "name": "Test_Checkout_API",
+        "path": "Checkout/Test_Checkout_API",
+        "iterationIndex": 0
+      }
+    ],
+    "summary": {
+      "totalRequests": 1,
+      "passedRequests": 0,
+      "failedRequests": 1,
+      "errorRequests": 0,
+      "skippedRequests": 0,
+      "totalAssertions": 0,
+      "passedAssertions": 0,
+      "failedAssertions": 0,
+      "totalTests": 3,
+      "passedTests": 1,
+      "failedTests": 2,
+      "totalPreRequestTests": 0,
+      "passedPreRequestTests": 0,
+      "failedPreRequestTests": 0,
+      "totalPostResponseTests": 0,
+      "passedPostResponseTests": 0,
+      "failedPostResponseTests": 0
+    }
+  }
+]

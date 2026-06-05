@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_7" tests="3" failures="1" time="220.0">
+    <testcase id="SEA_fyp" name="SEA_01_Search_test" classname="SEA_01_Search_test" time="63.5" status="SUCCESS"/>
+    <testcase id="SEA_qiq" name="SEA_02_Search_test" classname="SEA_02_Search_test" time="80.1" status="SUCCESS"/>
+    <testcase id="SEA_ih1" name="SEA_03_Search_test" classname="SEA_03_Search_test" time="76.4" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Search" type="AssertionError">Expected screen state was not reached during Search flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

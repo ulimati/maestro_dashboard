@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_8" tests="3" failures="2" time="172.5">
+    <testcase id="LOG_p3x" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="25.3" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Login" type="AssertionError">Expected screen state was not reached during Login flow.</failure>
+    </testcase>
+    <testcase id="LOG_ebh" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="69.9" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Login" type="AssertionError">Expected screen state was not reached during Login flow.</failure>
+    </testcase>
+    <testcase id="LOG_u63" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="77.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

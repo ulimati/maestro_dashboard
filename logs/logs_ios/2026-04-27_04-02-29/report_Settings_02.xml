@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="5" failures="0" time="307.6">
+    <testcase id="SET_yjs" name="SET_01_Settings_test" classname="SET_01_Settings_test" time="80.3" status="SUCCESS"/>
+    <testcase id="SET_i97" name="SET_02_Settings_test" classname="SET_02_Settings_test" time="42.4" status="SUCCESS"/>
+    <testcase id="SET_cw5" name="SET_03_Settings_test" classname="SET_03_Settings_test" time="50.9" status="SUCCESS"/>
+    <testcase id="SET_a57" name="SET_04_Settings_test" classname="SET_04_Settings_test" time="82.4" status="SUCCESS"/>
+    <testcase id="SET_62m" name="SET_05_Settings_test" classname="SET_05_Settings_test" time="51.6" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

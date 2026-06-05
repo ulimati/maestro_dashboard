@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone_14_Pro" tests="3" failures="1" time="94.0">
+    <testcase id="LOG_z0n" name="LOG_01_Login_test" classname="LOG_01_Login_test" time="8.6" status="SUCCESS"/>
+    <testcase id="LOG_bb4" name="LOG_02_Login_test" classname="LOG_02_Login_test" time="69.8" status="SUCCESS"/>
+    <testcase id="LOG_1j8" name="LOG_03_Login_test" classname="LOG_03_Login_test" time="15.6" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in Login" type="AssertionError">Expected screen state was not reached during Login flow.</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

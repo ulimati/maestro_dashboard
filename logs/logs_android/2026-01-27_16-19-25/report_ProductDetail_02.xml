@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_9" tests="6" failures="1" time="342.6">
+    <testcase id="PRO_eon" name="PRO_01_ProductDetail_test" classname="PRO_01_ProductDetail_test" time="59.3" status="FAILURE">
+      <failure message="AssertionError: Expected element not found in ProductDetail" type="AssertionError">Expected screen state was not reached during ProductDetail flow.</failure>
+    </testcase>
+    <testcase id="PRO_mdx" name="PRO_02_ProductDetail_test" classname="PRO_02_ProductDetail_test" time="38.7" status="SUCCESS"/>
+    <testcase id="PRO_i5w" name="PRO_03_ProductDetail_test" classname="PRO_03_ProductDetail_test" time="14.6" status="SUCCESS"/>
+    <testcase id="PRO_r5e" name="PRO_04_ProductDetail_test" classname="PRO_04_ProductDetail_test" time="83.5" status="SUCCESS"/>
+    <testcase id="PRO_h9e" name="PRO_05_ProductDetail_test" classname="PRO_05_ProductDetail_test" time="79.2" status="SUCCESS"/>
+    <testcase id="PRO_lxe" name="PRO_06_ProductDetail_test" classname="PRO_06_ProductDetail_test" time="67.3" status="SUCCESS"/>
+  </testsuite>
+</testsuites>
